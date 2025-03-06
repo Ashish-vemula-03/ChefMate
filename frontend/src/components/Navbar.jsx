@@ -1,59 +1,47 @@
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 
 const Navbar = () => {
-  // ⚠️ Replace this later with real authentication logic (Context or Redux)
-  const isAuthenticated = false; // Toggle this for testing
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // 🗑️ Clear tokens or auth states here (if using JWT, localStorage, etc.)
-    console.log("Logged out!");
-    navigate("/login");
-  };
-
   return (
-    <nav className="bg-gray-800 text-white p-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">
-          ChefMate 🍽️
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container">
+        <Link className="navbar-brand" to="/">
+          ChefMate
         </Link>
-
-        <div className="flex gap-4">
-          <Link to="/" className="hover:text-yellow-400">
-            Home
-          </Link>
-          <Link to="/recipes" className="hover:text-yellow-400">
-            Recipes
-          </Link>
-          {isAuthenticated && (
-            <>
-              <Link to="/favorites" className="hover:text-yellow-400">
-                Favorites
+        {/* Toggle Button */}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        
+        {/* Navbar Links */}
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <Link className="nav-link" to="/">
+                Home
               </Link>
-              <Link to="/recommendations" className="hover:text-yellow-400">
-                Recommendations
-              </Link>
-              <Link to="/dashboard" className="hover:text-yellow-400">
-                Dashboard
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="hover:text-red-400 font-semibold"
-              >
-                Logout
-              </button>
-            </>
-          )}
-          {!isAuthenticated && (
-            <>
-              <Link to="/login" className="hover:text-yellow-400">
-                Login
-              </Link>
-              <Link to="/register" className="hover:text-yellow-400">
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/register">
                 Register
               </Link>
-            </>
-          )}
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>

@@ -1,73 +1,86 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "../services/axios";
 import { useNavigate } from "react-router-dom";
-import api from "../services/axios";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function Login() {
+const Login = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
-      const res = await axios.post("/api/auth/login", formData);
-
-      // Store the token in localStorage for session management
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      alert("Login successful!");
-
-      // Redirect to Dashboard after login
-      navigate("/dashboard");
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed.");
+      await axios.post("/api/auth/login", formData);
+      navigate("/dashboard"); // ✅ Redirect to dashboard on successful login
+    } catch (error) {
+      setError(error.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
-
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white p-2 rounded"
-        >
-          Login
-        </button>
-      </form>
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{
+        minHeight: "100vh",
+        backgroundImage: "url('/src/assets/login-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="card p-4 shadow" style={{ width: "100%", maxWidth: "400px" }}>
+        <h2 className="text-center mb-4">Login to ChefMate</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Email address
+            </label>
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              className="form-control"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
-}
+};
+
+export default Login;

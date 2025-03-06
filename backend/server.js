@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const cron = require("node-cron");
 const multer = require("multer");
 const path = require("path");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const Recipe = require("./models/Recipe");
 const Ingredient = require("./models/Ingredient");
@@ -23,7 +25,11 @@ const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+// Allow frontend to connect (CORS)
+app.use(cors({
+  origin: "http://localhost:5173", // frontend URL
+  credentials: true,
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -36,6 +42,8 @@ app.use("/api/nutrition", nutrition);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/shopping-list", shoppingListRoutes);
 app.use("/api/meal-plan", mealPlanRoutes);
+
+
 
 
 // Test Route
@@ -84,3 +92,5 @@ cron.schedule("0 0 * * *", async () => {
 
 
 app.use("/api/recipes", recipeRoutes);
+
+
