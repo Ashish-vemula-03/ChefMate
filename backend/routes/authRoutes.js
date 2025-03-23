@@ -1,4 +1,5 @@
 const express = require("express");
+const { validateToken } = require("../controllers/authController"); 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
@@ -7,6 +8,7 @@ const User = require("../models/User");
 dotenv.config(); // Load environment variables
 
 const router = express.Router();
+router.get("/validate", validateToken); // ✅ Route is correct
 const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key"; // Use .env for production
 
 // 🔹 Register a new user
@@ -34,7 +36,6 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 // 🔹 Login User
 router.post("/login", async (req, res) => {

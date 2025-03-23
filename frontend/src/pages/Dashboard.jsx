@@ -1,61 +1,38 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Sidebar from "../components/Sidebar";
+import QuickActions from "../components/QuickActions";
+import StatsCard from "../components/StatsCard";
 
-export default function Dashboard() {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      // If no user is found in localStorage, redirect to login
-      navigate("/login");
-    }
-  }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
-  if (!user) return <p className="text-center mt-10">Loading...</p>;
+const Dashboard = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">
-        Welcome, {user.username} 👋
-      </h1>
+    <div className="flex h-screen">
+      {/* Sidebar (Fixed on the Left, Full Height) */}
+      <div className={`fixed top-0 left-0 h-full transition-all duration-300 ${sidebarOpen ? "w-64" : "w-20"} bg-gray-900 text-white`}>
+        <Sidebar setSidebarOpen={setSidebarOpen} />
+      </div>
 
-      <div className="space-y-4">
-        <p>
-          <strong>Email:</strong> {user.email}
-        </p>
+      {/* Main Content (Pushes Sidebar) */}
+      <div className={`flex-1 p-6 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-20"}`}>
+        <h1 className="text-3xl font-bold mb-6">Welcome to Your AI-Powered Dashboard</h1>
 
-        <div className="flex gap-4 mt-6">
-          <button
-            onClick={() => navigate("/favorites")}
-            className="bg-purple-600 text-white p-2 rounded"
-          >
-            View Favorites
-          </button>
-          <button
-            onClick={() => navigate("/recommendations")}
-            className="bg-blue-600 text-white p-2 rounded"
-          >
-            Get Recommendations
-          </button>
+        {/* Quick Actions & Metrics */}
+        <div className="grid grid-cols-3 gap-6">
+          <QuickActions title="Find Recipes" description="Discover AI-powered recipes." color="bg-blue-500" />
+          <QuickActions title="Track Macros" description="Analyze your daily nutrition." color="bg-green-500" />
+          <QuickActions title="Meal Planner" description="Plan weekly meals." color="bg-yellow-500" />
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="mt-8 bg-red-600 text-white p-2 rounded"
-        >
-          Logout
-        </button>
+        {/* User Statistics Section */}
+        <div className="grid grid-cols-3 gap-6 mt-6">
+          <StatsCard title="Saved Recipes" value="25" />
+          <StatsCard title="Recent Searches" value="12" />
+          <StatsCard title="AI Recommendations" value="8" />
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Dashboard;

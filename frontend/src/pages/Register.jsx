@@ -19,14 +19,20 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/api/auth/register", formData);
-      alert("✅ Registered successfully! Redirecting to login...");
-      navigate("/login");
+      const response = await axios.post("/api/auth/register", formData);
+  
+      if (response.status === 201 || response.status === 200) {
+        alert("✅ Registered successfully!");
+        navigate("/login"); // Ensure it redirects to the login page
+      } else {
+        throw new Error("Unexpected response from server.");
+      }
     } catch (error) {
       console.error(error.response?.data?.message || "Registration failed.");
       alert(`❌ ${error.response?.data?.message || "Registration failed."}`);
     }
   };
+  
 
   return (
     <div className="register-page">

@@ -8,6 +8,7 @@ const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const authRoutes = require("./routes/authRoutes");
 
 const Recipe = require("./models/Recipe");
 const Ingredient = require("./models/Ingredient");
@@ -20,14 +21,14 @@ const nutrition = require("./routes/nutrition");
 const shoppingListRoutes = require("./routes/shoppingListRoutes");
 const mealPlanRoutes = require("./routes/mealPlanRoutes");
 
-const authRoutes = require("./routes/authRoutes");
+
 const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 app.use(express.json());
 // Allow frontend to connect (CORS)
 app.use(cors({
-  origin: "http://localhost:5173", // frontend URL
+  origin: "http://localhost:5174", // frontend URL
   credentials: true,
 }));
 app.use(bodyParser.json());
