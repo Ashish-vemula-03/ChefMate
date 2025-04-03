@@ -17,7 +17,6 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
 
 // ✅ Create a new recipe with an image
 router.post("/add", upload.single("image"), async (req, res) => {

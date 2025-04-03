@@ -1,10 +1,12 @@
-export default function RecipeCard({ recipe }) {
-  return (
-    <div className="recipe-card">
-      <img src={recipe.image ? `http://localhost:5000${recipe.image}` : "/default-recipe.jpg"} alt={recipe.title} />
-      <h3>{recipe.title}</h3>
-      <p>{recipe.cuisine}</p>
-      <p>{recipe.difficulty}</p>
-    </div>
-  );
-}
+
+
+
+  export function Card({ children }) {
+    return <div className="card">{children}</div>;
+  }
+  
+  export function CardContent({ children }) {
+    return <div className="card-content">{children}</div>;
+  }
+  
+  
