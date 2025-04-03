@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const Recipe = require("../models/Recipe");
 const upload = require("../middlewares/upload"); // ✅ Added multer upload middleware
 const User = require("../models/User");
@@ -6,6 +7,60 @@ const router = express.Router();
 const { getRecommendations } = require("../controllers/recipeController");
 
 router.get('/recommendations/:userId', getRecommendations);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Ensure this directory exists
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+// ✅ Create a new recipe with an image
+router.post("/add", upload.single("image"), async (req, res) => {
+  try {
+    const { title, ingredients, instructions, cuisine, difficulty, category, prepTime, cookTime, servings, nutrition } = req.body;
+    
+    const newRecipe = new Recipe({
+      title,
+      ingredients: ingredients.split(","), // Ensure array format
+      instructions: instructions.split(". "),
+      cuisine,
+      difficulty,
+      category,
+      prepTime,
+      cookTime,
+      servings,
+      nutrition: JSON.parse(nutrition),
+      image: req.file ? `/uploads/${req.file.filename}` : "", // Save image path
+    });
+
+    await newRecipe.save();
+    res.status(201).json({ message: "Recipe added successfully!", recipe: newRecipe });
+  } catch (error) {
+    res.status(500).json({ error: "Error adding recipe" });
+  }
+});
+
+// ✅ Update recipe with an image
+router.put("/update/:id", upload.single("image"), async (req, res) => {
+  try {
+    const updatedData = req.body;
+    if (req.file) {
+      updatedData.image = `/uploads/${req.file.filename}`;
+    }
+
+    const updatedRecipe = await Recipe.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+    res.status(200).json({ message: "Recipe updated successfully!", recipe: updatedRecipe });
+  } catch (error) {
+    res.status(500).json({ error: "Error updating recipe" });
+  }
+});
+
+
 
 // ✅ Image upload route (for Step 6)
 // POST /api/recipes/:id/upload-image

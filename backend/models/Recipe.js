@@ -7,7 +7,7 @@ const RecipeSchema = new mongoose.Schema(
     instructions: { type: [String], required: true },
     cuisine: { type: String },
     difficulty: { type: String, enum: ["Easy", "Medium", "Hard"] },
-    image: { type: String }, // ✅ Stores the uploaded image path (handled via multer)
+    image: { type: String, default: "" }, // ✅ Stores the uploaded image path (handled via multer)
     category: { type: String },
     prepTime: { type: Number },
     cookTime: { type: Number },

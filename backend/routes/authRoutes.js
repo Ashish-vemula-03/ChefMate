@@ -1,66 +1,118 @@
 const express = require("express");
-const { validateToken } = require("../controllers/authController"); 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const User = require("../models/User");
+const { validateToken } = require("../controllers/authController"); 
 
 dotenv.config(); // Load environment variables
 
 const router = express.Router();
-router.get("/validate", validateToken); // ✅ Route is correct
+router.get("/validate", validateToken); // ✅ Route for token validation
+
 const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key"; // Use .env for production
 
-// 🔹 Register a new user
+// ✅ Register User
 router.post("/register", async (req, res) => {
+  console.log("📌 Registering user:", req.body);
+  
   try {
-    console.log("Registering user:", req.body);  // <-- Add this
-    const { username, email, password } = req.body;
+    const { username, email, password, mobile } = req.body;
 
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ $or: [{ email }, { mobile }] });
     if (user) {
-      console.log("User already exists");
-      return res.status(400).json({ message: "User already exists" });
+      console.log("❌ User already exists");
+      return res.status(400).json({ message: "Email or Mobile already registered" });
     }
 
+    // ✅ Hash password before saving
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+    console.log("🔹 Hashed Password Generated:", hashedPassword);
 
-    user = new User({ username, email, password: hashedPassword });
+    // ✅ Save the hashed password in DB
+    user = new User({ username, email, password: hashedPassword, mobile });
     await user.save();
 
-    console.log("User registered successfully!");
+    console.log("✅ User registered successfully!");
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error("Error in registration:", error);  // <-- Add this
-    res.status(500).json({ error: error.message });
+    console.error("❌ Error in registration:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-// 🔹 Login User
+// ✅ Login User
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("📌 Incoming Login Request:", email);
 
-    // Check if user exists
+    // ✅ Find User
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+    if (!user) {
+      console.log("❌ User not found");
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-    // Verify password
+    // ✅ Compare Password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    console.log("🔹 Password Match Result:", isMatch);
 
-    // Generate JWT Token
-    const token = jwt.sign({ userId: user._id }, SECRET_KEY, { expiresIn: "1h" });
+    if (!isMatch) {
+      console.log("❌ Password does not match");
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-    res.status(200).json({ 
+    // ✅ Generate JWT Token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || "your_secret_key",
+      { expiresIn: "7d" }
+    );
+
+    console.log("✅ Login Successful:", { userId: user._id, token });
+
+    // ✅ Send Response
+    res.status(200).json({
       message: "Login successful",
       token,
-      user: { id: user._id, username: user.username, email: user.email } 
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        mobile: user.mobile,
+        profilePicture: user.profilePicture,
+      },
     });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("❌ Error in login:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
+router.get("/validate", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ valid: false, message: "No token provided." });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(404).json({ valid: false, message: "User not found." });
+    }
+
+    res.status(200).json({ valid: true, user });
+  } catch (error) {
+    console.error("Token validation error:", error.message);
+    res.status(401).json({ valid: false, message: "Invalid or expired token" });
+  }
+});
+
+
 
 module.exports = router;

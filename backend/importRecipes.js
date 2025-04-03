@@ -17,10 +17,35 @@ if (!fs.existsSync(filePath)) {
   process.exit(1);
 }
 
-const recipes = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-console.log("📄 Recipe Data Before Saving:", JSON.stringify(recipes, null, 2)); // ✅ Fixed here
+let fileContent = fs.readFileSync(filePath, "utf-8");
 
-// Bulk Insert
+let recipes;
+try {
+  recipes = JSON.parse(fileContent);
+
+  // ✅ Handle case where JSON contains an object with key "recipes"
+  if (recipes.hasOwnProperty("recipes") && Array.isArray(recipes.recipes)) {
+    recipes = recipes.recipes;
+  } else if (!Array.isArray(recipes)) {
+    throw new Error("recipes.json must contain an array!");
+  }
+
+} catch (error) {
+  console.error("❌ JSON Parsing Error:", error.message);
+  process.exit(1);
+}
+
+// ✅ Add Default Image or Validate Existing Image
+recipes = recipes.map(recipe => ({
+  ...recipe,
+  image: recipe.image && recipe.image.trim() !== "" 
+    ? recipe.image 
+    : "https://via.placeholder.com/300.png?text=No+Image", // Default Image URL
+}));
+
+console.log("📄 Recipe Data Before Saving:", JSON.stringify(recipes, null, 2));
+
+// Bulk Insert with Image Handling
 const importData = async () => {
   try {
     await Recipe.insertMany(recipes);
@@ -28,6 +53,7 @@ const importData = async () => {
     mongoose.connection.close();
   } catch (error) {
     console.error("❌ Error:", error);
+    mongoose.connection.close();
   }
 };
 

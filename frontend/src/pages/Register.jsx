@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/register.css";
+import { BiMobile } from "react-icons/bi";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -11,29 +12,43 @@ const Register = () => {
     username: "",
     email: "",
     password: "",
+    mobile: "", // ✅ Added mobile field
   });
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+  
+    // Clear any old tokens or data before registering
+    localStorage.removeItem("authToken"); 
+    localStorage.removeItem("user");
+  
     try {
-      const response = await axios.post("/api/auth/register", formData);
+      const response = await axios.post("/auth/register", formData);
   
       if (response.status === 201 || response.status === 200) {
-        alert("✅ Registered successfully!");
-        navigate("/login"); // Ensure it redirects to the login page
+        setSuccessMessage("✅ Registered successfully! Redirecting to login...");
+        setTimeout(() => navigate("/login"), 2000); // Redirect after 2 seconds
       } else {
         throw new Error("Unexpected response from server.");
       }
     } catch (error) {
-      console.error(error.response?.data?.message || "Registration failed.");
-      alert(`❌ ${error.response?.data?.message || "Registration failed."}`);
+      const message = error.response?.data?.message || "Registration failed.";
+      setErrorMessage(`❌ ${message}`);
+    } finally {
+      setLoading(false);
     }
   };
   
-
   return (
     <div className="register-page">
       {/* Background Images */}
@@ -56,6 +71,13 @@ const Register = () => {
         transition={{ duration: 0.5 }}
       >
         <h2 className="text-center mb-4">Join ChefMate</h2>
+
+        {/* Error Message */}
+        {errorMessage && <p className="alert alert-danger">{errorMessage}</p>}
+
+        {/* Success Message */}
+        {successMessage && <p className="alert alert-success">{successMessage}</p>}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label>Username</label>
@@ -68,6 +90,7 @@ const Register = () => {
               required
             />
           </div>
+
           <div className="mb-3">
             <label>Email</label>
             <input
@@ -79,6 +102,7 @@ const Register = () => {
               required
             />
           </div>
+
           <div className="mb-3">
             <label>Password</label>
             <input
@@ -90,15 +114,39 @@ const Register = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-warning w-100">
-            Register
+
+          {/* ✅ Added Mobile Number Field */}
+          <div className="mb-3">
+            <label>Mobile Number</label>
+            <div className="input-group">
+              <span className="input-group-text">
+                <BiMobile size={20} />
+              </span>
+              <input
+                type="tel"
+                name="mobile"
+                className="form-control"
+                value={formData.mobile}
+                onChange={handleChange}
+                placeholder="Enter your mobile number"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-warning w-100"
+            disabled={loading}
+          >
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
         {/* Login Link */}
         <div className="text-center mt-3">
           Already have an account?{" "}
-          <Link to="/login" className="text-decoration-none">
+          <Link to="/login" className="text-decoration-none text-primary fw-bold">
             Login
           </Link>
         </div>

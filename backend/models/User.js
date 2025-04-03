@@ -1,19 +1,33 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }], // Reference to Recipe Model
-  dietPreferences: { 
-    type: String, 
-    enum: ["Vegetarian", "Vegan", "Keto", "High-Protein", "Balanced"] 
-  },
-  recommendations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }], // Reference to Recipe Model
-  allergies: [{ type: String }],
-  shoppingList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ingredient" }], // Reference to Ingredient Model 
-  mealPlans: [{ type: mongoose.Schema.Types.ObjectId, ref: "MealPlan" }], // Reference to MealPlan Model
+let User;
 
-});
+if (!mongoose.models.User) {
+  const userSchema = new mongoose.Schema({
+    username: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
+    password: { type: String, required: true },
+    mobile: { 
+      type: String, 
+      required: true, 
+      unique: true,
+      match: [/^\d{10}$/, "Invalid mobile number format"]
+    },
+    profilePicture: { type: String, default: "" },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
+    recommendations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
+    dietPreferences: [{ type: String, enum: ["Vegetarian", "Vegan", "Keto", "High-Protein", "Balanced"] }],
+    allergies: [{ type: String }],
+    shoppingList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ingredient" }],
+    mealPlans: [{ type: mongoose.Schema.Types.ObjectId, ref: "MealPlan" }],
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+  }, { timestamps: true });
 
-module.exports = mongoose.model("User", UserSchema);
+  // ✅ Remove hashing from pre("save") to avoid double hashing
+  User = mongoose.model("User", userSchema);
+} else {
+  User = mongoose.models.User;
+}
+
+module.exports = User;
