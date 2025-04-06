@@ -1,7 +1,7 @@
 const express = require("express");
 const User = require("../models/User");
 const Recipe = require("../models/Recipe");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 const { addFavorite, getFavorites } = require("../controllers/favoritesController");
 
 

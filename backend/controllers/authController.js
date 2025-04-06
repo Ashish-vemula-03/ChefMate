@@ -100,4 +100,51 @@ export const updateProfilePicture = async (req, res) => {
   }
 };
 
+// ✅ Delete Account
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Delete user from database
+    await User.findByIdAndDelete(userId);
+
+    console.log("🗑️ User deleted:", userId);
+    res.status(200).json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("❌ Error deleting account:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+// ✅ Change Password Controller
+export const changePassword = async (req, res) => {
+  try {
+    const userId = req.user?._id.toString();  // depending on how you attach user in middleware
+    const { currentPassword, newPassword } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized or invalid token" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Incorrect current password" });
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedNewPassword;
+    await user.save();
+
+    console.log(`🔐 Password changed for user: ${user.email}`);
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error("❌ Error updating password:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
 

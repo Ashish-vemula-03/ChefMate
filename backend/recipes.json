@@ -1,20 +1,61 @@
 [
   {
-    "title": "Pasta Carbonara",
-    "ingredients": ["Pasta", "Egg", "Bacon", "Cheese"],
-    "instructions": ["Boil pasta", "Fry bacon", "Mix egg and cheese", "Combine"],
-    "cuisine": "Italian",
-    "difficulty": "Medium",
-    "category": "Main Course",
-    "prepTime": 10,
-    "cookTime": 20,
-    "servings": 2,
-    "image": "https://example.com/images/pasta.jpg",
+    "title": "Idli",
+    "ingredients": [
+      "2 cups rice",
+      "1 cup urad dal",
+      "1/2 tsp salt",
+      "Water as needed"
+    ],
+    "instructions": [
+      "Soak rice and urad dal separately for 6 hours.",
+      "Grind to a smooth batter and ferment overnight.",
+      "Add salt and mix well.",
+      "Steam in idli molds for 10-12 minutes.",
+      "Serve hot with chutney and sambar."
+    ],
+    "cuisine": "South Indian",
+    "difficulty": "Easy",
+    "image": "https://source.unsplash.com/featured/?idli",
+    "category": "Tiffin",
+    "prepTime": 480,
+    "cookTime": 15,
+    "servings": 4,
     "nutrition": {
-      "calories": 500,
-      "protein": 25,
-      "fat": 30,
-      "carbs": 50
+      "calories": 150,
+      "protein": 4,
+      "fat": 0.5,
+      "carbs": 32
+    }
+  },
+  {
+    "title": "Dosa",
+    "ingredients": [
+      "2 cups rice",
+      "1 cup urad dal",
+      "1/2 tsp salt",
+      "Water as needed",
+      "Oil for cooking"
+    ],
+    "instructions": [
+      "Soak rice and urad dal separately for 6 hours.",
+      "Grind to a smooth batter and ferment overnight.",
+      "Add salt and mix well.",
+      "Spread a thin layer on a hot tawa and cook until golden brown.",
+      "Serve hot with chutney and sambar."
+    ],
+    "cuisine": "South Indian",
+    "difficulty": "Medium",
+    "image": "https://source.unsplash.com/featured/?dosa",
+    "category": "Tiffin",
+    "prepTime": 480,
+    "cookTime": 10,
+    "servings": 4,
+    "nutrition": {
+      "calories": 200,
+      "protein": 5,
+      "fat": 4,
+      "carbs": 38
     }
   }
 ]

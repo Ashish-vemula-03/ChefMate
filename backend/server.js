@@ -22,6 +22,7 @@ const shoppingListRoutes = require("./routes/shoppingListRoutes");
 const mealPlanRoutes = require("./routes/mealPlanRoutes");
 
 
+
 const userRoutes = require("./routes/userRoutes");
 
 const app = express();

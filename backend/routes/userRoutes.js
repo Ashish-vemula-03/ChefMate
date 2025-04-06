@@ -3,8 +3,9 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const User = require("../models/User"); // ✅ Ensure it's imported correctly
-const authMiddleware = require("../middlewares/authMiddleware");
-const { updateProfilePicture }  = require("../controllers/authController"); // ✅ Ensure the controller is imported correctly
+const { authMiddleware, protect } = require("../middlewares/authMiddleware");
+const { updateProfilePicture, deleteAccount } = require("../controllers/authController"); // ✅ Now includes deleteAccount
+const { changePassword } = require("../controllers/authController"); // ✅ Ensure this is imported correctly
 
 const router = express.Router();
 
@@ -132,5 +133,13 @@ router.post("/upload-profile-picture", authMiddleware, upload.single("profilePic
  * ✅ Update Profile Picture Route (Moved Below Initialization)
  */
 router.put("/profile-picture/:userId", updateProfilePicture); // ✅ Fixed position
+
+/**
+ * ✅ Delete User Account
+ */
+router.delete("/delete-account", authMiddleware, deleteAccount); // ✅ New delete route added
+
+router.post("/changepassword", authMiddleware, changePassword);
+
 
 module.exports = router;

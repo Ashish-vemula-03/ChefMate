@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Recipe = require("../models/Recipe");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 
 // ✅ Similarity scoring function
 function calculateSimilarity(recipe, favoriteCuisines, favoriteCategories, favoriteIngredients) {
