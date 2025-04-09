@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardNavbar from "../components/DashboardNavbar";
 import DashboardSidebar from "../components/DashboardSidebar";
+import "../styles/Dashboard.css"; // Import the new CSS
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -15,24 +16,20 @@ export default function Dashboard() {
   }, [navigate]);
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-      
-      {/* Sidebar */}
-      <div className={`transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-20'}`}>
-        <DashboardSidebar 
-          isOpen={sidebarOpen} 
-          toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
+    <div className="dashboard-container">
+      {/* Fixed Navbar */}
+      <DashboardNavbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+
+      {/* Sidebar and Main Content Layout */}
+      <div className="dashboard-layout">
+        <DashboardSidebar
+          isOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
         />
-      </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar */}
-        <DashboardNavbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-
-        {/* Dashboard content */}
-        <main className="flex-1 p-4 overflow-y-auto">
-          <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">Welcome to Your Dashboard</h2>
+        <main className="dashboard-main-content">
+          <h2 className="dashboard-title">Welcome to Your Dashboard</h2>
+          {/* Add more content here */}
         </main>
       </div>
     </div>

@@ -1,0 +1,31 @@
+/* Dashboard.css */
+
+.dashboard-container {
+    min-height: 100vh;
+    background-color: #f3f4f6; /* Tailwind's gray-100 */
+    color: #1f2937; /* gray-800 */
+  }
+  
+  .dark .dashboard-container {
+    background-color: #111827; /* dark:bg-gray-900 */
+    color: white;
+  }
+  
+  /* Fixed Navbar height */
+  .dashboard-layout {
+    display: flex;
+    margin-top: 60px; /* Reserve space for fixed navbar */
+  }
+  
+  /* Main Content Area */
+  .dashboard-main-content {
+    flex: 1;
+    padding: 1rem;
+  }
+  
+  /* Title */
+  .dashboard-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
