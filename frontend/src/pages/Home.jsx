@@ -3,96 +3,245 @@ import Button from "../components/ui/Button";
 import { Card, CardContent } from "../components/ui/Card";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import chefMateLogo from "../assets/login-bg.jpg";
 
 const Home = () => {
   return (
-    <div className="min-vh-100 bg-gray-100">
+    <>
+    <header class="p-5 d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3  border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0">
+        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+          <img src={chefMateLogo} alt="ChefMate Logo" className="logo" />
+        </a>
+      </div>
 
-      {/* Hero Section */}
-      <section className="bg-dark text-white text-center py-5 d-flex flex-column align-items-center justify-content-center">
-        <h1 className="display-3 fw-bold">
-          Elevate Your Cooking with <span className="text-warning">ChefMate</span>
+      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
+        <li><a href="#" class="nav-link px-2">Features</a></li>
+        <li><a href="#" class="nav-link px-2">Pricing</a></li>
+        <li><a href="#" class="nav-link px-2">FAQs</a></li>
+        <li><a href="#" class="nav-link px-2">About</a></li>
+      </ul>
+
+      <div class="col-md-3 text-end">
+      <Link to="/login">
+      <button className="btn btn-outline-primary me-2">Login</button>
+      </Link>
+      <Link to="/register">
+      <button className="btn btn-primary">Sign-up</button>
+          </Link>
+      </div>
+    </header>
+    <section className="min-vh-100 d-flex align-items-center bg-light">
+  <div className="container-fluid">
+    <div className="row align-items-center">
+      {/* Text Section */}
+      <div className="col-lg-6 p-5">
+        <h1 className="display-4 fw-bold lh-1 text-body-emphasis">
+          Border hero with cropped image and shadows
         </h1>
         <p className="lead mt-3">
-          Personalized recipes powered by AI. Save time. Cook smarter. Eat better.
+          Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.
         </p>
-        <div className="mt-4 d-flex gap-3 flex-wrap justify-content-center">
+        <div className="d-grid gap-2 d-md-flex justify-content-start mt-4">
           <Link to="/register">
-            <Button className="btn btn-warning btn-lg">Get Started</Button>
-          </Link>
-          <Link to="/recipes">
-            <Button className="btn btn-outline-light btn-lg">Browse Recipes</Button>
+          <button type="button" className="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Get Started</button>
           </Link>
         </div>
-      </section>
+      </div>
 
-      {/* Features Section */}
-      <section className="container py-5">
-        <h2 className="text-center fw-bold mb-5 text-dark">
-          Why ChefMate?
-        </h2>
-        <div className="row g-4">
-
-          <div className="col-md-4">
-            <Card className="text-center p-4 shadow-sm h-100">
-              <CardContent>
-                <FaSearch className="text-primary display-4 mb-3" />
-                <h3 className="h5 fw-bold">Smart Recipe Search</h3>
-                <p className="text-muted">
-                  Find recipes based on the ingredients in your kitchen.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="col-md-4">
-            <Card className="text-center p-4 shadow-sm h-100">
-              <CardContent>
-                <FaHeart className="text-danger display-4 mb-3" />
-                <h3 className="h5 fw-bold">Save Your Favorites</h3>
-                <p className="text-muted">
-                  Keep track of the dishes you love and access them anytime.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="col-md-4">
-            <Card className="text-center p-4 shadow-sm h-100">
-              <CardContent>
-                <FaUtensils className="text-success display-4 mb-3" />
-                <h3 className="h5 fw-bold">AI-Powered Suggestions</h3>
-                <p className="text-muted">
-                  Get personalized recommendations tailored to your taste.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Call To Action */}
-      <section className="bg-warning text-dark py-5 text-center">
-        <h2 className="display-5 fw-bold">
-          Ready to Become a Master Chef?
-        </h2>
-        <p className="lead mt-3">
-          Join now and let ChefMate guide you to culinary greatness!
-        </p>
-        <Link to="/register">
-          <Button className="btn btn-dark btn-lg mt-3">Join ChefMate</Button>
-        </Link>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-dark text-white text-center py-4">
-        <p className="mb-0">
-          © {new Date().getFullYear()} ChefMate | Crafted with ❤️ for food lovers.
-        </p>
-      </footer>
-
+      {/* Image Section */}
+      <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
+        <img 
+          src="bootstrap-docs.png" 
+          alt="Bootstrap Docs" 
+          className="img-fluid rounded-4 shadow-lg" 
+          style={{ maxHeight: '90vh', objectFit: 'cover' }} 
+        />
+      </div>
     </div>
+  </div>
+</section>
+<section className="min-vh-100 d-flex align-items-center bg-white px-5">
+  <div className="container-fluid">
+    <div className="row align-items-center">
+      {/* Image Left */}
+      <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
+        <img
+          src="feature1.png"
+          alt="Feature 1"
+          className="img-fluid rounded-4 shadow-lg w-100"
+          style={{ maxHeight: '100vh', objectFit: 'cover' }}
+        />
+      </div>
+
+      {/* Text Right */}
+      <div className="col-lg-6 p-5">
+        <h2 className="fw-bold display-5">Feature One</h2>
+        <p className="lead mt-3">
+          This is a short description about Feature One. It provides amazing functionality, great UX, and speeds up your workflow.
+        </p>
+        <ul className="list-unstyled fs-5 mt-4">
+          <li>✅ Easy to use</li>
+          <li>✅ Fully responsive</li>
+          <li>✅ Lightning fast</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section className="min-vh-100 d-flex align-items-center bg-light px-5">
+  <div className="container-fluid">
+    <div className="row align-items-center flex-lg-row-reverse">
+      {/* Image Right */}
+      <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
+        <img
+          src="feature2.png"
+          alt="Feature 2"
+          className="img-fluid rounded-4 shadow-lg w-100"
+          style={{ maxHeight: '100vh', objectFit: 'cover' }}
+        />
+      </div>
+
+      {/* Text Left */}
+      <div className="col-lg-6 p-5">
+        <h2 className="fw-bold display-5">Feature Two</h2>
+        <p className="lead mt-3">
+          Another fantastic feature that helps users get the most out of your app, built with modern tools and best practices.
+        </p>
+        <ul className="list-unstyled fs-5 mt-4">
+          <li>✅ Customizable design</li>
+          <li>✅ Smooth animations</li>
+          <li>✅ Powerful integrations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section className="bg-white py-5 position-relative overflow-hidden">
+  <div className="container-fluid px-5 position-relative">
+
+    <h2 className="text-center fw-bold mb-5 display-6">What Our Users Say</h2>
+
+    {/* Shadow overlays on both sides */}
+    <div className="position-absolute top-0 start-0 w-25 h-100"
+      style={{ background: "linear-gradient(to right, white, rgba(255,255,255,0))", zIndex: 2 }}
+    />
+    <div className="position-absolute top-0 end-0 w-25 h-100"
+      style={{ background: "linear-gradient(to left, white, rgba(255,255,255,0))", zIndex: 2 }}
+    />
+
+    <div className="slider-wrapper">
+      <div className="slide-track d-flex gap-4">
+        {/* Duplicate testimonials for infinite loop effect */}
+        {[...Array(2)].flatMap(() =>
+          [1, 2, 3, 4, 5].map((num) => (
+            <div
+              key={num + Math.random()}
+              className="bg-white border rounded shadow-sm p-4"
+              style={{
+                minWidth: "400px",
+                height: "180px",
+                flex: "0 0 auto",
+              }}
+            >
+              <p className="mb-3">
+                “Testimonial #{num}: This product is amazing. It made my workflow smoother and faster!”
+              </p>
+              <h6 className="fw-semibold mb-0">User {num}</h6>
+              <small className="text-muted">Verified Buyer</small>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  </div>
+
+  {/* Style block */}
+  <style>
+    {`
+      .slider-wrapper {
+        overflow: hidden;
+        position: relative;
+      }
+
+      .slide-track {
+        animation: slide-loop 40s linear infinite;
+      }
+
+      @keyframes slide-loop {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+    `}
+  </style>
+</section>
+
+
+<section className="min-vh-100 d-flex align-items-center bg-light">
+  <div className="container px-5">
+    <div className="row justify-content-center">
+      <div className="col-lg-8">
+        <div className="text-center mb-5">
+          <h2 className="fw-bold display-5">Contact Us</h2>
+          <p className="lead text-muted">
+            We'd love to hear from you! Fill out the form and our team will get back to you soon.
+          </p>
+        </div>
+
+        <form>
+          <div className="row mb-3">
+            <div className="col-md-6 mb-3 mb-md-0">
+              <input
+                type="text"
+                className="form-control form-control-lg"
+                placeholder="Your Name"
+                required
+              />
+            </div>
+            <div className="col-md-6">
+              <input
+                type="email"
+                className="form-control form-control-lg"
+                placeholder="Your Email"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control form-control-lg"
+              placeholder="Subject"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <textarea
+              className="form-control form-control-lg"
+              rows="5"
+              placeholder="Your Message"
+              required
+            ></textarea>
+          </div>
+
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary btn-lg px-5 fw-bold">
+              Send Message
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+</>
   );
 };
 
