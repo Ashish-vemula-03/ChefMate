@@ -20,6 +20,9 @@ const authMiddleware = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid token structure." });
     }
 
+    req.userId = decoded.userId; // Attach userId to req
+    console.log("User ID from middleware:", req.userId);
+
     if (!mongoose.Types.ObjectId.isValid(decoded.userId)) {
       return res.status(400).json({ message: "Invalid user ID format" });
     }

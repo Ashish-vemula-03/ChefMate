@@ -6,6 +6,7 @@ const User = require("../models/User"); // ✅ Ensure it's imported correctly
 const { authMiddleware, protect } = require("../middlewares/authMiddleware");
 const { updateProfilePicture, deleteAccount } = require("../controllers/authController"); // ✅ Now includes deleteAccount
 const { changePassword } = require("../controllers/authController"); // ✅ Ensure this is imported correctly
+const { updatePersonalSettings } = require("../controllers/authController"); // ✅ Ensure this is imported correctly
 
 const router = express.Router();
 
@@ -140,6 +141,8 @@ router.put("/profile-picture/:userId", updateProfilePicture); // ✅ Fixed posit
 router.delete("/delete-account", authMiddleware, deleteAccount); // ✅ New delete route added
 
 router.post("/changepassword", authMiddleware, changePassword);
+
+router.put("/update-personal-settings", authMiddleware, updatePersonalSettings); // ✅ New route for updating personal settings
 
 
 module.exports = router;

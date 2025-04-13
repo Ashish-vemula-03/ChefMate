@@ -148,3 +148,44 @@ export const changePassword = async (req, res) => {
 
 
 
+export const updatePersonalSettings = async (req, res) => {
+  console.log("User ID from middleware:", req.userId);
+
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    console.log("User found:", user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update personal settings
+    const {
+      age,
+      gender,
+      weight,
+      height,
+      cookingSkill,
+      dietPreferences,
+      allergies,
+      preferredCuisines,
+    } = req.body;
+
+    user.age = age || user.age;
+    user.gender = gender || user.gender;
+    user.weight = weight || user.weight;
+    user.height = height || user.height;
+    user.cookingSkill = cookingSkill || user.cookingSkill;
+    user.dietPreferences = dietPreferences || user.dietPreferences;
+    user.allergies = allergies || user.allergies;
+    user.preferredCuisines = preferredCuisines || user.preferredCuisines;
+
+    await user.save();
+
+    res.status(200).json({ message: "Personal settings updated successfully", user });
+  } catch (error) {
+    console.error("Error updating personal settings:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

@@ -67,6 +67,24 @@ export default function Profile() {
     } finally {
       setLoading(false);
     }
+    try {
+      const res = await axios.put(
+        "/users/update-personal-settings",
+        editedUser,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+        }
+      );
+      setUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setEditMode(false);
+      alert("Personal settings updated successfully! ✅");
+    } catch (err) {
+      console.error("Error updating personal settings:", err);
+      alert("Failed to update personal settings. Please try again ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChangePassword = async () => {
@@ -212,8 +230,8 @@ export default function Profile() {
                       <option value="Advanced">Advanced</option>
                     </select>
 
-                    <label>Dietary Restrictions:</label>
-                    <input type="text" name="dietaryRestrictions" value={editMode ? editedUser?.dietaryRestrictions || "" : user?.dietaryRestrictions || ""} onChange={editMode ? handleEditedChange : undefined} disabled={!editMode} />
+                    <label>Diet Preferences:</label>
+                    <input type="text" name="dietPreferences" value={editMode ? editedUser?.dietPreferences || "" : user?.dietPreferences || ""} onChange={editMode ? handleEditedChange : undefined} disabled={!editMode} />
 
                     <label>Allergies:</label>
                     <input type="text" name="allergies" value={editMode ? editedUser?.allergies || "" : user?.allergies || ""} onChange={editMode ? handleEditedChange : undefined} disabled={!editMode} />
