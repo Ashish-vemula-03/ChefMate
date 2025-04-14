@@ -1,61 +1,69 @@
-[
-  {
-    "title": "Idli",
-    "ingredients": [
-      "2 cups rice",
-      "1 cup urad dal",
-      "1/2 tsp salt",
-      "Water as needed"
-    ],
-    "instructions": [
-      "Soak rice and urad dal separately for 6 hours.",
-      "Grind to a smooth batter and ferment overnight.",
-      "Add salt and mix well.",
-      "Steam in idli molds for 10-12 minutes.",
-      "Serve hot with chutney and sambar."
-    ],
-    "cuisine": "South Indian",
-    "difficulty": "Easy",
-    "image": "https://source.unsplash.com/featured/?idli",
-    "category": "Tiffin",
-    "prepTime": 480,
-    "cookTime": 15,
-    "servings": 4,
-    "nutrition": {
-      "calories": 150,
-      "protein": 4,
-      "fat": 0.5,
-      "carbs": 32
+ [
+    {
+      "title": "Idli",
+      "ingredients": [
+        "1 cup rice",
+        "1/4 cup urad dal (split black gram)",
+        "1/4 tsp fenugreek seeds",
+        "Water (as required)",
+        "Salt (to taste)"
+      ],
+      "instructions": [
+        "Soak the rice and urad dal with fenugreek seeds for 4-6 hours.",
+        "Grind the rice and dal mixture to a smooth batter using water.",
+        "Let the batter ferment for 8-12 hours in a warm place.",
+        "Once fermented, add salt and mix the batter.",
+        "Grease idli molds and pour the batter into them.",
+        "Steam the idlis for 10-12 minutes or until they are cooked through.",
+        "Serve hot with sambar and coconut chutney."
+      ],
+      "cuisine": "South Indian",
+      "difficulty": "Easy",
+      "image": "idli.jpg", 
+      "category": "Breakfast",
+      "prepTime": 20,
+      "cookTime": 15,
+      "servings": 4,
+      "nutrition": {
+        "calories": 150,
+        "protein": 3,
+        "fat": 1,
+        "carbs": 30
+      }
+    },
+    {
+      "title": "Dosa",
+      "ingredients": [
+        "1 cup rice",
+        "1/4 cup urad dal (split black gram)",
+        "1/4 tsp fenugreek seeds",
+        "Water (as required)",
+        "Salt (to taste)",
+        "Oil (for cooking)"
+      ],
+      "instructions": [
+        "Soak the rice and urad dal with fenugreek seeds for 4-6 hours.",
+        "Grind the rice and dal mixture to a smooth batter using water.",
+        "Let the batter ferment for 8-12 hours in a warm place.",
+        "Once fermented, add salt and mix the batter.",
+        "Heat a non-stick tawa (griddle) and grease it with oil.",
+        "Pour a ladle of the batter on the tawa and spread it thin.",
+        "Cook the dosa on medium heat until crispy and golden brown, then flip and cook for a minute.",
+        "Serve hot with sambar and chutney."
+      ],
+      "cuisine": "South Indian",
+      "difficulty": "Medium",
+      "image": "dosa.jpg", 
+     "category": "Breakfast",
+      "prepTime": 20,
+      "cookTime": 10,
+      "servings": 2,
+      "nutrition": {
+        "calories": 200,
+        "protein": 5,
+        "fat": 6,
+        "carbs": 35
+      }
     }
-  },
-  {
-    "title": "Dosa",
-    "ingredients": [
-      "2 cups rice",
-      "1 cup urad dal",
-      "1/2 tsp salt",
-      "Water as needed",
-      "Oil for cooking"
-    ],
-    "instructions": [
-      "Soak rice and urad dal separately for 6 hours.",
-      "Grind to a smooth batter and ferment overnight.",
-      "Add salt and mix well.",
-      "Spread a thin layer on a hot tawa and cook until golden brown.",
-      "Serve hot with chutney and sambar."
-    ],
-    "cuisine": "South Indian",
-    "difficulty": "Medium",
-    "image": "https://source.unsplash.com/featured/?dosa",
-    "category": "Tiffin",
-    "prepTime": 480,
-    "cookTime": 10,
-    "servings": 4,
-    "nutrition": {
-      "calories": 200,
-      "protein": 5,
-      "fat": 4,
-      "carbs": 38
-    }
-  }
-]
+  ]
+
