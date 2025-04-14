@@ -18,11 +18,11 @@
   }
   
   .sidebar-collapsed {
-    width: 5rem; /* 80px */
+    width: 4rem; /* 80px */
   }
   
   .sidebar-expanded {
-    width: 16rem; /* 256px */
+    width: 10rem; /* 256px */
   }
   
   .sidebar-item {

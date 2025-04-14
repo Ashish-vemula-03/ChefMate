@@ -54,7 +54,7 @@ const DashboardSidebar = ({ isOpen: parentSidebarState, setSidebarOpen }) => {
       </div>
 
       {/* Bottom Toggle Button */}
-      <div className="p-2 border-t border-gray-200 dark:border-gray-700">
+      <div className="p-2 border-t border-gray-150 dark:border-gray-700">
         <button
           onClick={() => setSidebarOpen((prev) => !prev)}
           className={clsx(
@@ -62,7 +62,7 @@ const DashboardSidebar = ({ isOpen: parentSidebarState, setSidebarOpen }) => {
             parentSidebarState ? "w-full p-2" : "w-10 h-10 mx-auto"
           )}
         >
-          {parentSidebarState ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+          {parentSidebarState ? <ChevronLeft size={16} /> : <ChevronRight size={20} />}
         </button>
       </div>
     </aside>
