@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import chefMateLogo from "../assets/login-bg.jpg";
 import "../styles/DashboardNavbar.css";
 
-export default function DashboardNavbar() {
+export default function DashboardNavbar({ setSearchQuery }) {
   const [darkMode, setDarkMode] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // Search query state
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -50,6 +51,12 @@ export default function DashboardNavbar() {
     navigate("/login");
   };
 
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setSearchQuery(e.target.value); // Pass search query to parent component
+  };
+
   return (
     <nav className="dashboard-navbar">
       {/* Left Section: Logo & Brand Name */}
@@ -61,7 +68,13 @@ export default function DashboardNavbar() {
       {/* Middle Section: Search Bar */}
       <div className="navbar-search">
         <Search className="search-icon" size={20} />
-        <input type="text" placeholder="Search recipes, ingredients..." className="search-input" />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange} // Handle search input
+          placeholder="Search recipes, ingredients..."
+          className="search-input"
+        />
       </div>
 
       {/* Right Section: Dark Mode & Profile Dropdown */}

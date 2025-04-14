@@ -7,19 +7,24 @@ import MainContent from "../components/MainContent";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
-      navigate("/");
+      navigate("/"); // Redirect if no user is logged in
     }
   }, [navigate]);
 
   return (
     <div className="dashboard-container">
       {/* Fixed Navbar */}
-      <DashboardNavbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+      <DashboardNavbar 
+        toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
+        searchQuery={searchQuery} // Passing searchQuery to Navbar
+        setSearchQuery={setSearchQuery} // Passing setSearchQuery to Navbar
+      />
 
       {/* Sidebar and Main Content Layout */}
       <div className="dashboard-layout">
@@ -29,8 +34,8 @@ export default function Dashboard() {
         />
 
         <main className="dashboard-main-content">
-      <MainContent />
-          {/* Add more content here */}
+          {/* Pass searchQuery to MainContent */}
+          <MainContent searchQuery={searchQuery} />
         </main>
       </div>
     </div>
