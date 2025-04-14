@@ -1,7 +1,7 @@
 /* DashboardSidebar.css */
 
 .dashboard-sidebar {
-    position: relative; /* Ensures it flows below fixed navbar */
+    position: fixed; /* Ensures it flows below fixed navbar */
     top: 0;
     background-color: white;
     color: #1f2937; /* text-gray-800 */
@@ -9,6 +9,7 @@
     transition: width 0.3s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
+    margin-top: 60px; /* Adjust to match navbar height */
   }
   
   .dashboard-sidebar.dark {
