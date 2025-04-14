@@ -42,12 +42,12 @@ app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/nutrition", nutrition);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads/profile")));
 app.use("/api/shopping-list", shoppingListRoutes);
 app.use("/api/meal-plan", mealPlanRoutes);
 
 // 🟢 Serve Static Files (Uploaded Images)
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads/profile"));
 
 // 🟢 Configure Multer for File Uploads
 const storage = multer.diskStorage({
