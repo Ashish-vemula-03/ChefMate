@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardNavbar from "../components/DashboardNavbar";
 import DashboardSidebar from "../components/DashboardSidebar";
 import "../styles/Dashboard.css"; // Import the new CSS
+import MainContent from "../components/MainContent";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -28,7 +29,7 @@ export default function Dashboard() {
         />
 
         <main className="dashboard-main-content">
-          <h2 className="dashboard-title">Welcome to Your Dashboard</h2>
+      <MainContent />
           {/* Add more content here */}
         </main>
       </div>
