@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/login.css";
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = ({ setUser }) => {
   const navigate = useNavigate();
@@ -12,15 +12,17 @@ const Login = ({ setUser }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkingToken, setCheckingToken] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
+  useEffect(() => {
     const token = localStorage.getItem("authToken");
 
     if (!token) {
@@ -29,7 +31,7 @@ const Login = ({ setUser }) => {
     }
 
     api
-      .get("/auth/validate", { headers: { Authorization: `Bearer ${token}` } })
+      .get("/auth/validate", { headers: { Authorization: `Bearer ${token}` } }) // Fixed template literal
       .then((res) => {
         if (res.data?.valid) {
           console.log("✅ Token valid. Redirecting to dashboard.");
@@ -62,7 +64,9 @@ const Login = ({ setUser }) => {
       setUser(user);
       navigate("/dashboard");
     } catch (error) {
-      setError(error.response?.data?.message || "Login failed. Try again.");
+      setError(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -138,7 +142,7 @@ const Login = ({ setUser }) => {
                 <FaLock />
               </span>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="form-control login-input"
                 id="password"
                 name="password"
@@ -147,6 +151,13 @@ const Login = ({ setUser }) => {
                 onChange={handleChange}
                 required
               />
+              <span
+                className="input-group-text"
+                style={{ cursor: "pointer" }}
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
           </div>
 

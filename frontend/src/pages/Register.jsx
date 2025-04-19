@@ -4,21 +4,32 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/register.css";
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import { FaUser, FaLock, FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
+    mobile: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -34,9 +45,10 @@ const Register = () => {
 
     try {
       const response = await api.post("/auth/register", {
-        name: formData.name,
+        username: formData.username,
         email: formData.email,
         password: formData.password,
+        mobile: formData.mobile,
       });
       navigate("/login");
     } catch (error) {
@@ -79,10 +91,10 @@ const Register = () => {
               <input
                 type="text"
                 className="form-control register-input"
-                id="name"
-                name="name"
+                id="username"
+                name="username"
                 placeholder="Enter your full name"
-                value={formData.name}
+                value={formData.username}
                 onChange={handleChange}
                 required
               />
@@ -106,12 +118,29 @@ const Register = () => {
             </div>
           </div>
           <div className="mb-3">
+            <label htmlFor="mobile" className="register-label">
+              Mobile Number
+            </label>
+            <div className="input-group register-input-group">
+              <input
+                type="tel"
+                className="form-control register-input"
+                id="mobile"
+                name="mobile"
+                placeholder="Enter your mobile number"
+                value={formData.mobile}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+          <div className="mb-3">
             <label htmlFor="password" className="register-label">
               Password
             </label>
             <div className="input-group register-input-group">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="form-control register-input"
                 id="password"
                 name="password"
@@ -120,6 +149,13 @@ const Register = () => {
                 onChange={handleChange}
                 required
               />
+              <span
+                className="input-group-text"
+                onClick={togglePasswordVisibility}
+                style={{ cursor: "pointer" }}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
           </div>
           <div className="mb-3">
@@ -128,7 +164,7 @@ const Register = () => {
             </label>
             <div className="input-group register-input-group">
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 className="form-control register-input"
                 id="confirmPassword"
                 name="confirmPassword"
@@ -137,6 +173,13 @@ const Register = () => {
                 onChange={handleChange}
                 required
               />
+              <span
+                className="input-group-text"
+                onClick={toggleConfirmPasswordVisibility}
+                style={{ cursor: "pointer" }}
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
           </div>
 

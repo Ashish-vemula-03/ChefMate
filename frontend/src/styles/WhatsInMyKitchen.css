@@ -1,0 +1,116 @@
+/* Main container for the What's In My Kitchen component */
+.whats-in-my-kitchen {
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-left: 250px; /* Adjust according to the sidebar width */
+  width: calc(100% - 250px); /* Make the container take up remaining width */
+  box-sizing: border-box;
+}
+
+/* Header styling */
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Styling for the ingredient input section */
+.ingredient-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.ingredient-input-field {
+  flex: 1;
+  margin-right: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.add-ingredient-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.add-ingredient-btn:hover {
+  background-color: #45a049;
+}
+
+.add-ingredient-btn:active {
+  background-color: #388e3c;
+}
+
+/* Ingredient list section */
+.ingredient-list {
+  margin-top: 20px;
+}
+
+.ingredient-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.ingredient-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  transition: box-shadow 0.3s ease;
+}
+
+.ingredient-item:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ingredient-item span {
+  font-size: 1rem;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Remove button styling */
+.remove-ingredient-btn {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.remove-ingredient-btn:hover {
+  background-color: #ff7875;
+}
+
+.remove-ingredient-btn:active {
+  background-color: #d9363e;
+}
+
+/* Empty state styling */
+.no-ingredients {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #999;
+  margin-top: 20px;
+}
