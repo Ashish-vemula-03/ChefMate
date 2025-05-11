@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   FaSearch,
   FaHeart,
@@ -5,121 +6,220 @@ import {
   FaRocket,
   FaUser,
   FaSignInAlt,
+  FaBrain,
+  FaApple,
+  FaClock,
+  FaShoppingBasket,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import chefMateLogo from "../assets/login-bg.jpg";
+import "../styles/home.css";
+import logo from "../assets/img/logo/logo2.png";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setActiveSection(sectionId);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 50;
+      setScrolled(scrolled);
+
+      // Logo animation
+      const logo = document.getElementById("floating-logo");
+      if (logo) {
+        if (scrolled) {
+          logo.classList.add("scrolled");
+        } else {
+          logo.classList.remove("scrolled");
+        }
+      }
+
+      // Check which section is currently in view
+      const sections = ["home", "features", "testimonials", "contact"];
+      sections.forEach((sectionId) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            setActiveSection(sectionId);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const sections = document.querySelectorAll("section");
+    sections.forEach((section) => observer.observe(section));
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      sections.forEach((section) => observer.unobserve(section));
+    };
+  }, []);
+
+  const handleGetStarted = () => {
+    navigate("/register");
+  };
+
   return (
     <>
-      <header className="p-3 d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
-        <div className="col-md-3 mb-2 mb-md-0">
-          <Link
-            to="/"
-            className="d-inline-flex link-body-emphasis text-decoration-none align-items-center"
-          >
-            <img
-              src={chefMateLogo}
-              alt="ChefMate Logo"
-              className="logo"
-              style={{ height: "40px", width: "40px", borderRadius: "50%" }}
-            />
-            <p className="fw-bold fs-4 mx-2 text-success text-uppercase mb-0">
-              ChefMate
-            </p>
-          </Link>
-        </div>
-
-        <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-          <li>
-            <Link to="/" className="nav-link px-2 link-secondary">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to="/recipes" className="nav-link px-2">
-              Recipes
-            </Link>
-          </li>
-          <li>
-            <Link to="/meal-planner" className="nav-link px-2">
-              Meal Planner
-            </Link>
-          </li>
-          <li>
-            <Link to="/profile" className="nav-link px-2">
-              Profile
-            </Link>
-          </li>
-        </ul>
-
-        <div className="col-md-3 text-end">
-          <Link to="/login">
-            <button className="btn btn-outline-primary me-2">
-              <FaSignInAlt className="me-2" />
-              Login
-            </button>
-          </Link>
-          <Link to="/register">
-            <button className="btn btn-primary">
-              <FaUser className="me-2" />
-              Sign Up
-            </button>
-          </Link>
+      <header className={`home-header ${scrolled ? "scrolled" : ""}`}>
+        <div className="container-fluid px-4">
+          <div className="d-flex flex-wrap align-items-center justify-content-between">
+            <div className="col-md-3 mb-2 mb-md-0">
+              <Link
+                to="/"
+                className="d-inline-flex text-decoration-none align-items-center"
+              >
+                <img
+                  src={logo}
+                  alt="ChefMate Logo"
+                  className={`nav-logo ${scrolled ? "visible" : ""}`}
+                  style={{
+                    height: "45px",
+                    width: "auto",
+                  }}
+                />
+                <p className="fw-bold fs-4 mx-2 home-logo text-uppercase mb-0 brand-text">
+                  Chef<span className="accent-text">Mate</span>
+                </p>
+              </Link>
+            </div>
+            <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+              <li>
+                <a
+                  onClick={() => scrollToSection("home")}
+                  className={`nav-link ${
+                    activeSection === "home" ? "active" : ""
+                  }`}
+                >
+                  Home
+                </a>
+              </li>
+              <li>
+                <a
+                  onClick={() => scrollToSection("features")}
+                  className={`nav-link ${
+                    activeSection === "features" ? "active" : ""
+                  }`}
+                >
+                  Features
+                </a>
+              </li>
+              <li>
+                <a
+                  onClick={() => scrollToSection("testimonials")}
+                  className={`nav-link ${
+                    activeSection === "testimonials" ? "active" : ""
+                  }`}
+                >
+                  Testimonials
+                </a>
+              </li>
+              <li>
+                <a
+                  onClick={() => scrollToSection("contact")}
+                  className={`nav-link ${
+                    activeSection === "contact" ? "active" : ""
+                  }`}
+                >
+                  Contact
+                </a>
+              </li>
+            </ul>
+            <div className="col-md-3 text-end">
+              <Link to="/login" className="btn btn-primary me-2">
+                <FaSignInAlt className="me-2" />
+                Login
+              </Link>
+              <Link to="/register" className="btn btn-primary">
+                <FaUser className="me-2" />
+                Sign Up
+              </Link>
+            </div>
+          </div>
         </div>
       </header>
-
-      <section className="min-vh-100 d-flex align-items-center bg-light">
+      <section
+        id="home"
+        className="min-vh-100 d-flex align-items-center justify-content-center"
+      >
         <div className="container-fluid">
-          <div className="row align-items-center">
-            <div className="col-lg-6 p-5">
-              <h1 className="display-4 fw-bold lh-1 text-body-emphasis">
+          <div className="text-center">
+            <div className="hero-logo-container">
+              <img
+                src={logo}
+                alt="ChefMate Logo"
+                className="hero-logo"
+                id="floating-logo"
+              />
+            </div>
+            <div className="typing-text-container">
+              <h1 className="display-4 fw-bold lh-1 text-body-emphasis typing-text">
                 Your Personal AI Chef Assistant
               </h1>
-              <p className="lead mt-3">
-                Discover personalized recipes, plan your meals, and get cooking
-                guidance tailored to your preferences. ChefMate uses AI to help
-                you create delicious meals that match your dietary needs and
-                cooking skills.
-              </p>
-              <div className="d-grid gap-2 d-md-flex justify-content-start mt-4">
-                <Link to="/register">
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-lg px-4 me-md-2 fw-bold"
-                  >
-                    <FaRocket className="me-2" />
-                    Get Started
-                  </button>
-                </Link>
-              </div>
             </div>
-
-            <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
-              <img
-                src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                alt="Delicious Food"
-                className="img-fluid rounded-4 shadow-lg"
-                style={{ maxHeight: "90vh", objectFit: "cover" }}
-              />
+            <p className="lead mt-3 typing-text-delay">
+              Discover personalized recipes, plan your meals, and get cooking
+              guidance tailored to your preferences. ChefMate uses AI to help
+              you create delicious meals that match your dietary needs and
+              cooking skills.
+            </p>
+            <div className="d-grid gap-2 d-md-flex justify-content-center mt-4">
+              <Link to="/register">
+                <button
+                  onClick={handleGetStarted}
+                  className="btn btn-primary btn-lg px-4 me-md-2 fw-bold"
+                >
+                  <FaRocket className="me-2" />
+                  Get Started
+                </button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
-
-      <section className="min-vh-100 d-flex align-items-center bg-white px-5">
+      <section
+        id="features"
+        className="min-vh-100 d-flex align-items-center bg-white px-5"
+      >
         <div className="container-fluid">
+          <div className="text-center mb-5">
+            <span className="badge bg-warning text-dark mb-3">Features</span>
+            <h2 className="display-5 fw-bold mb-3 section-title">
+              What We <span className="accent-text">Offer</span>
+            </h2>
+          </div>
           <div className="row align-items-center">
             <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
               <img
                 src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
                 alt="Personalized Recipes"
-                className="img-fluid rounded-4 shadow-lg w-100"
-                style={{ maxHeight: "100vh", objectFit: "cover" }}
+                className="img-fluid rounded-4 shadow-lg w-100 section-image-full"
               />
             </div>
-
             <div className="col-lg-6 p-5">
               <h2 className="fw-bold display-5">
                 Personalized Recipe Recommendations
@@ -145,7 +245,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
       <section className="min-vh-100 d-flex align-items-center bg-light px-5">
         <div className="container-fluid">
           <div className="row align-items-center flex-lg-row-reverse">
@@ -174,108 +273,112 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      <section className="bg-white py-5 position-relative overflow-hidden">
+      <section
+        id="testimonials"
+        className="bg-white py-5 position-relative overflow-hidden"
+      >
         <div className="container-fluid px-5 position-relative">
-          <h2 className="text-center fw-bold mb-5 display-6">
-            What Our Users Say
-          </h2>
+          <div className="text-center mb-5">
+            <span className="badge bg-warning text-dark mb-3">
+              Testimonials
+            </span>
+            <h2 className="display-5 fw-bold mb-3 section-title">
+              What Our <span className="accent-text">Users</span> Say
+            </h2>
+          </div>
 
-          <div
-            className="position-absolute top-0 start-0 w-25 h-100"
-            style={{
-              background:
-                "linear-gradient(to right, white, rgba(255,255,255,0))",
-              zIndex: 2,
-            }}
-          />
-          <div
-            className="position-absolute top-0 end-0 w-25 h-100"
-            style={{
-              background:
-                "linear-gradient(to left, white, rgba(255,255,255,0))",
-              zIndex: 2,
-            }}
-          />
-
-          <div className="slider-wrapper">
-            <div className="slide-track d-flex gap-4">
-              {[...Array(2)].flatMap(() =>
-                [
+          <div className="testimonials-slider">
+            <div className="testimonials-track">
+              {[...Array(2)]
+                .flatMap(() => [
                   {
-                    text: "ChefMate has completely transformed how I cook! The personalized recipes are spot-on and the meal planning feature saves me so much time.",
-                    name: "Sarah J.",
-                    role: "Home Cook",
+                    text: "ChefMate has changed the way I cook! So easy and intuitive.",
+                    name: "Alice Johnson",
+                    role: "Home Chef",
                   },
                   {
-                    text: "As someone with dietary restrictions, finding suitable recipes was always a challenge. ChefMate makes it so easy!",
-                    name: "Michael T.",
-                    role: "Health Enthusiast",
+                    text: "Amazing app for discovering new recipes based on what I have!",
+                    name: "Bob Smith",
+                    role: "Food Enthusiast",
                   },
                   {
-                    text: "The AI-powered recommendations are amazing. It's like having a personal chef who knows exactly what I like!",
-                    name: "Emma L.",
-                    role: "Food Blogger",
+                    text: "Finally, an app that helps reduce food waste and inspires creativity.",
+                    name: "Carla Diaz",
+                    role: "Nutritionist",
                   },
-                  {
-                    text: "I've learned so much about cooking since using ChefMate. The step-by-step instructions are perfect for beginners.",
-                    name: "David R.",
-                    role: "Cooking Newbie",
-                  },
-                  {
-                    text: "The meal planning feature has helped me stay organized and eat healthier. Highly recommend!",
-                    name: "Lisa M.",
-                    role: "Busy Professional",
-                  },
-                ].map((testimonial, index) => (
-                  <div
-                    key={index + Math.random()}
-                    className="bg-white border rounded shadow-sm p-4"
-                    style={{
-                      minWidth: "400px",
-                      height: "180px",
-                      flex: "0 0 auto",
-                    }}
-                  >
-                    <p className="mb-3">"{testimonial.text}"</p>
-                    <h6 className="fw-semibold mb-0">{testimonial.name}</h6>
-                    <small className="text-muted">{testimonial.role}</small>
+                ])
+                .map((testimonial, index) => (
+                  <div key={index} className="testimonial-card">
+                    <p className="mb-3">{testimonial.text}</p>
+                    <div className="testimonial-author">
+                      <h5 className="mb-0">{testimonial.name}</h5>
+                      <small className="text-muted">{testimonial.role}</small>
+                    </div>
                   </div>
-                ))
-              )}
+                ))}
             </div>
           </div>
         </div>
 
         <style>
           {`
-            .slider-wrapper {
+            .testimonials-slider {
               overflow: hidden;
               position: relative;
+              padding: 20px 0;
             }
 
-            .slide-track {
-              animation: slide-loop 40s linear infinite;
+            .testimonials-track {
+              display: flex;
+              gap: 20px;
+              animation: scroll 5s linear infinite;
             }
 
-            @keyframes slide-loop {
+            .testimonials-track:hover {
+              animation-play-state: paused;
+            }
+
+            .testimonial-card {
+              min-width: 280px;
+              flex: 0 0 auto;
+              padding: 1.5rem;
+              background: white;
+              border-radius: 15px;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+              border: 1px solid rgba(255, 215, 0, 0.1);
+              transition: all 0.3s ease;
+            }
+
+            .testimonial-card:hover {
+              transform: translateY(-5px);
+              background: #fff8e8;
+              border-color: var(--primary);
+              box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            @keyframes scroll {
               0% {
                 transform: translateX(0);
               }
               100% {
-                transform: translateX(-50%);
+                transform: translateX(calc(-100% / 2));
               }
             }
           `}
         </style>
       </section>
-
-      <section className="min-vh-100 d-flex align-items-center bg-light">
+      <section
+        id="contact"
+        className="min-vh-100 d-flex align-items-center bg-light"
+      >
         <div className="container px-5">
           <div className="row justify-content-center">
             <div className="col-lg-8">
               <div className="text-center mb-5">
-                <h2 className="fw-bold display-5">Get in Touch</h2>
+                <span className="badge bg-warning text-dark mb-3">
+                  Contact Us
+                </span>
+                <h2 className="display-5 fw-bold mb-3">Get in Touch</h2>
                 <p className="lead text-muted">
                   Have questions or suggestions? We'd love to hear from you!
                 </p>
