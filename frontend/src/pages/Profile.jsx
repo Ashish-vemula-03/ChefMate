@@ -37,8 +37,12 @@ export default function Profile() {
       } else {
         try {
           const res = await axios.get("/users/profile");
-          if (res.data.success) {
-            const userData = res.data.user;
+
+          const personalRes = await axios.get("/users/personal-settings");
+          const personalData = personalRes.data;
+
+          if (res.data) {
+            const userData = res.data;
             setUser(userData);
             setEditedUser(userData);
             localStorage.setItem("user", JSON.stringify(userData));
@@ -144,10 +148,11 @@ export default function Profile() {
 
       const updatedUser = {
         ...basicRes.data,
-        ...personalRes.data,
+        ...personalRes.data.user,
       };
 
       setUser(updatedUser);
+      setEditedUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setEditMode(false);
       alert("Profile updated successfully! ✅");

@@ -7,6 +7,8 @@ const { authMiddleware, protect } = require("../middlewares/authMiddleware");
 const { updateProfilePicture, deleteAccount } = require("../controllers/authController"); // ✅ Now includes deleteAccount
 const { changePassword } = require("../controllers/authController"); // ✅ Ensure this is imported correctly
 const { updatePersonalSettings } = require("../controllers/authController"); // ✅ Ensure this is imported correctly
+const { getUserProfile } = require("../controllers/userController");
+
 
 const router = express.Router();
 
@@ -130,6 +132,23 @@ router.post("/upload-profile-picture", authMiddleware, upload.single("profilePic
   }
 });
 
+
+/**
+ * ✅ Get Logged-In User Profile (including personal settings)
+ */
+router.get("/profile", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+
 /**
  * ✅ Update Profile Picture Route (Moved Below Initialization)
  */
@@ -144,5 +163,6 @@ router.post("/changepassword", authMiddleware, changePassword);
 
 router.put("/update-personal-settings", authMiddleware, updatePersonalSettings); // ✅ New route for updating personal settings
 
+router.get("/profilr", authMiddleware, getUserProfile);
 
 module.exports = router;

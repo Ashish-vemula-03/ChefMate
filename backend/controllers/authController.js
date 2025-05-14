@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import User from "../models/User.js"; 
+import User from "../models/User.js";
 
 // ✅ Register a New User
 export const register = async (req, res) => {
@@ -30,6 +30,9 @@ export const register = async (req, res) => {
 };
 
 // ✅ Login User
+// authController.js
+
+// ✅ Login User
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -50,9 +53,23 @@ export const login = async (req, res) => {
       { expiresIn: "7d" }
     );
 
+    // Sending additional user details (including personal settings) along with the token
     res.status(200).json({
       token,
-      user: { id: user._id, username: user.username, email: user.email, profilePicture: user.profilePicture },
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        profilePicture: user.profilePicture,
+        age: user.age,
+        gender: user.gender,
+        weight: user.weight,
+        height: user.height,
+        cookingSkill: user.cookingSkill,
+        dietPreferences: user.dietPreferences,
+        allergies: user.allergies,
+        preferredCuisines: user.preferredCuisines,
+      },
     });
 
   } catch (error) {
@@ -60,6 +77,8 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+
 
 // ✅ Validate Token
 

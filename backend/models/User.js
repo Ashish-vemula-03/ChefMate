@@ -8,9 +8,9 @@ if (!mongoose.models.User) {
     username: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
-    mobile: { 
-      type: String, 
-      required: true, 
+    mobile: {
+      type: String,
+      required: true,
       unique: true,
       match: [/^\d{10}$/, "Invalid mobile number format"]
     },
@@ -27,7 +27,7 @@ if (!mongoose.models.User) {
     weight: { type: Number },
     height: { type: Number },
     cookingSkill: { type: String, enum: ["Beginner", "Intermediate", "Advanced"] },
-    preferredCuisines: { type: String },
+    preferredCuisines: [{ type: String }],
   }, { timestamps: true });
 
   // ✅ Remove hashing from pre("save") to avoid double hashing
