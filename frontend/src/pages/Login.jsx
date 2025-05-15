@@ -23,6 +23,11 @@ const Login = ({ setUser }) => {
   };
 
   useEffect(() => {
+
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("authToken");
+
     const token = localStorage.getItem("authToken");
 
     if (!token) {

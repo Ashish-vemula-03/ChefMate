@@ -220,7 +220,7 @@ export default function Profile() {
       if (res.status === 200) {
         const updatedUser = {
           ...user,
-          profilePicture: res.data.profilePicture,
+          profilePicture: res.data.profilePicture, // This is the Cloudinary URL!
         };
         setUser(updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
