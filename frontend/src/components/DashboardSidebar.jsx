@@ -24,7 +24,12 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 
-const DashboardSidebar = ({ isOpen: parentSidebarState, setSidebarOpen, selectedMenu, setSelectedMenu }) => {
+const DashboardSidebar = ({
+  isOpen: parentSidebarState,
+  setSidebarOpen,
+  selectedMenu,
+  setSelectedMenu,
+}) => {
   const navItems = [
     { label: "Explore", icon: Utensils },
     { label: "My Recipes", icon: BookOpenCheck },
@@ -46,17 +51,30 @@ const DashboardSidebar = ({ isOpen: parentSidebarState, setSidebarOpen, selected
   ];
 
   return (
-    <aside className={clsx("dashboard-sidebar", parentSidebarState ? "sidebar-expanded" : "sidebar-collapsed", "dark")}>
+    <aside
+      className={clsx(
+        "dashboard-sidebar",
+        parentSidebarState ? "sidebar-expanded" : "sidebar-collapsed",
+        "dark"
+      )}
+    >
       <div className="px-2 space-y-2 pb-6">
         {navItems.map(({ label, icon: Icon }) => (
           <div
             key={label}
-            className={clsx("sidebar-item dark group relative", selectedMenu === label && "active")}
+            className={clsx(
+              "sidebar-item dark group relative",
+              selectedMenu === label && "active"
+            )}
             onClick={() => setSelectedMenu(label)}
           >
             <div className="flex items-center gap-3 cursor-pointer">
               <Icon size={20} />
-              {parentSidebarState ? <span>{label}</span> : <span className="tooltip">{label}</span>}
+              {parentSidebarState ? (
+                <span>{label}</span>
+              ) : (
+                <span className="tooltip">{label}</span>
+              )}
             </div>
           </div>
         ))}
@@ -71,7 +89,11 @@ const DashboardSidebar = ({ isOpen: parentSidebarState, setSidebarOpen, selected
             parentSidebarState ? "w-full p-2" : "w-10 h-10 mx-auto"
           )}
         >
-          {parentSidebarState ? <ChevronLeft size={16} /> : <ChevronRight size={20} />}
+          {parentSidebarState ? (
+            <ChevronLeft size={16} />
+          ) : (
+            <ChevronRight size={20} />
+          )}
         </button>
       </div>
     </aside>
