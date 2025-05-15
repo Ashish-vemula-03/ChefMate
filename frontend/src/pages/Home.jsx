@@ -15,11 +15,32 @@ import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/home.css";
 import logo from "../assets/img/logo/logo2.png";
+import { Sun, Moon } from "lucide-react";
 
 const Home = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    if (darkMode) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+    setDarkMode(!darkMode);
+  };
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -149,7 +170,14 @@ const Home = () => {
                 </a>
               </li>
             </ul>
-            <div className="col-md-3 text-end">
+            <div className="col-md-3 text-end d-flex align-items-center justify-content-end gap-3">
+              <button
+                onClick={toggleDarkMode}
+                className="icon-button"
+                aria-label="Toggle Dark Mode"
+              >
+                {darkMode ? <Sun size={24} /> : <Moon size={24} />}
+              </button>
               <Link to="/login" className="btn btn-primary me-2">
                 <FaSignInAlt className="me-2" />
                 Login
@@ -312,7 +340,9 @@ const Home = () => {
                     <p className="mb-3">{testimonial.text}</p>
                     <div className="testimonial-author">
                       <h5 className="mb-0">{testimonial.name}</h5>
-                      <small className="text-muted">{testimonial.role}</small>
+                      <small className="text-secondary">
+                        {testimonial.role}
+                      </small>
                     </div>
                   </div>
                 ))}

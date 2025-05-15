@@ -688,3 +688,219 @@ p,
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* Remove these sections */
+/* Dark mode variables */
+/* Add this at the root level */
+html.dark {
+  background-color: var(--bg-primary);
+}
+
+/* Update dark mode styles */
+.dark {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --bg-glass: rgba(0, 0, 0, 0.3);
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --card-bg: rgba(45, 55, 72, 0.8);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --main-bg: #1a1a1a;
+}
+
+/* Update section backgrounds in dark mode */
+.dark section {
+  background-color: var(--bg-primary) !important;
+}
+
+.dark section.bg-white {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark section.bg-light {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Update gradient overlays in dark mode */
+.dark .gradient-overlay-left {
+  background: linear-gradient(to right, var(--bg-primary), rgba(26, 32, 44, 0));
+}
+
+.dark .gradient-overlay-right {
+  background: linear-gradient(to left, var(--bg-primary), rgba(26, 32, 44, 0));
+}
+
+/* Update testimonials section in dark mode */
+.dark #testimonials {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark .testimonial-card {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.dark .testimonial-card:hover {
+  background: rgba(45, 55, 72, 0.9);
+  border-color: var(--primary);
+}
+
+/* Dark mode styles for sections */
+.dark section {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Dark mode header styles */
+.dark .home-header {
+  background: linear-gradient(
+    to right,
+    rgba(26, 32, 44, 0.98),
+    rgba(45, 55, 72, 0.98)
+  );
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.dark .home-header.scrolled {
+  background: linear-gradient(
+    to right,
+    rgba(26, 32, 44, 0.95),
+    rgba(45, 55, 72, 0.95)
+  );
+}
+
+/* Dark mode navigation styles */
+.dark .nav-link {
+  color: var(--text-secondary) !important;
+}
+
+.dark .nav-link:hover {
+  color: var(--primary) !important;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.dark .nav-link.active {
+  color: var(--primary) !important;
+  background: rgba(255, 215, 0, 0.15);
+}
+
+/* Dark mode hero section */
+.dark .hero-section {
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+}
+
+.dark .hero-section::before {
+  opacity: 0.1;
+}
+
+/* Dark mode cards */
+.dark .feature-card,
+.dark .testimonial-card,
+.dark .contact-section form {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+.dark .feature-card:hover,
+.dark .testimonial-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  border-color: var(--primary);
+}
+
+/* Dark mode text styles */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+.dark .display-4,
+.dark .display-5,
+.dark .display-6 {
+  color: white !important;
+}
+
+.dark p,
+.dark .lead {
+  color: var(--text-secondary) !important;
+}
+
+/* Dark mode form elements */
+.dark .form-control {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.dark .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.2);
+}
+
+/* Dark mode gradients */
+.dark .brand-text {
+  background: linear-gradient(45deg, var(--text-primary), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .accent-text {
+  background: linear-gradient(45deg, var(--primary), var(--primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .text-gradient {
+  background: linear-gradient(
+    45deg,
+    var(--text-primary),
+    var(--text-secondary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Dark mode button styles */
+.dark .btn-primary {
+  background: var(--gradient-primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--bg-secondary) !important;
+}
+
+.dark .btn-primary:hover {
+  background: var(--gradient-hover) !important;
+  box-shadow: 0 6px 20px var(--shadow-primary);
+}
+
+/* Dark mode icon button */
+.dark .icon-button {
+  color: white;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark .icon-button:hover {
+  background: var(--bg-glass);
+  transform: translateY(-2px);
+}
+.dark ul li {
+  color: white;
+}
+.dark body {
+  background-color: var(--bg-primary);
+}
+
+.dark #contact input {
+  background-color: rgb(175, 172, 172);
+  color: white;
+}
+
+.dark #contact textarea {
+  background-color: rgb(175, 172, 172);
+  color: white;
+}
