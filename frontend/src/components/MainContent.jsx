@@ -6,24 +6,13 @@ import "../styles/MainContent.css";
 
 // Recipe Card
 const RecipeCard = ({ recipe, isFavorite, onToggleFavorite, onClick }) => (
-  <div className="recipe-card" onClick={() => onClick(recipe)} style={{ cursor: "pointer" }}>
+  <div className="recipe-card" onClick={() => onClick(recipe)}>
     <div style={{ position: "relative" }}>
       <img src={recipe.image} alt={recipe.title} className="recipe-image" />
       <button
-        className="favorite-btn"
-        style={{
-          position: "absolute",
-          top: 10,
-          left: 10,
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          color: isFavorite ? "#e74c3c" : "#aaa",
-          fontSize: "1.5rem",
-          zIndex: 2,
-        }}
-        onClick={e => {
-          e.stopPropagation(); // Prevent card click
+        className={`favorite-btn ${isFavorite ? "active" : ""}`}
+        onClick={(e) => {
+          e.stopPropagation();
           onToggleFavorite(recipe);
         }}
         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
@@ -47,73 +36,96 @@ const RecipeCard = ({ recipe, isFavorite, onToggleFavorite, onClick }) => (
 );
 
 // Recipe Details View
-const RecipeDetails = ({
-  recipe,
-  onBack,
-  onFavorite,
-  isFavorite
-}) => (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "flex-start",
-      minHeight: "100vh",
-      width: "100%",
-    }}
-  >
-    <div
-      className="recipe-details-view"
-      style={{
-        maxWidth: 600,
-        width: "100%",
-        background: "#222",
-        borderRadius: 16,
-        padding: 32,
-        boxShadow: "0 4px 24px rgba(0,0,0,0.15)",
-        color: "#fff",
-        margin: "40px 0",
-        position: "relative",
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 24 }}>
-        <button className="btn btn-secondary" onClick={onBack}>
-          ← Back to recipes
-        </button>
-        <button
-          className="btn btn-danger"
-          onClick={() => onFavorite(recipe)}
-          style={{ display: "flex", alignItems: "center", gap: 6 }}
-        >
-          <FaHeart style={{ color: isFavorite ? "#e74c3c" : "#fff" }} />
-          {isFavorite ? "Remove Favorite" : "Add to Favorites"}
-        </button>
-      </div>
-      <h2 style={{ marginBottom: 16, textAlign: "center" }}>{recipe.title}</h2>
+const RecipeDetails = ({ recipe, onBack, onFavorite, isFavorite }) => (
+  <div className="recipe-details-view">
+    <div className="recipe-details-header">
+      <button className="btn btn-back" onClick={onBack}>
+        ← Back to recipes
+      </button>
+      <button
+        className={`btn btn-favorite ${isFavorite ? "active" : ""}`}
+        onClick={() => onFavorite(recipe)}
+      >
+        <FaHeart />
+        {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+      </button>
+    </div>
+
+    <h2 className="recipe-details-title">{recipe.title}</h2>
+
+    <div className="recipe-details-image-container">
       <img
         src={recipe.image}
         alt={recipe.title}
-        style={{ width: "100%", maxWidth: 400, borderRadius: 12, margin: "0 auto 20px", display: "block" }}
+        className="recipe-details-image"
       />
-      <div style={{ margin: "1rem 0", textAlign: "left" }}>
-        <strong>Cuisine:</strong> {recipe.cuisine} <br />
-        <strong>Category:</strong> {recipe.category} <br />
-        <strong>Prep Time:</strong> {recipe.prepTime} mins <br />
-        <strong>Cook Time:</strong> {recipe.cookTime} mins <br />
+    </div>
+
+    <div className="recipe-details-content">
+      <div className="recipe-info-section">
+        <div className="recipe-meta">
+          <div className="meta-item">
+            <strong>Cuisine:</strong> {recipe.cuisine}
+          </div>
+          <div className="meta-item">
+            <strong>Category:</strong> {recipe.category}
+          </div>
+          <div className="meta-item">
+            <strong>Prep Time:</strong> {recipe.prepTime} mins
+          </div>
+          <div className="meta-item">
+            <strong>Cook Time:</strong> {recipe.cookTime} mins
+          </div>
+          {recipe.difficulty && (
+            <div className="meta-item">
+              <strong>Difficulty:</strong> {recipe.difficulty}
+            </div>
+          )}
+        </div>
+
         {recipe.description && (
-          <>
-            <strong>Description:</strong> {recipe.description} <br />
-          </>
+          <div className="recipe-description">
+            <h3>Description</h3>
+            <p>{recipe.description}</p>
+          </div>
+        )}
+
+        {recipe.nutrition && (
+          <div className="nutrition-info">
+            <h3>Nutrition Information</h3>
+            <div className="nutrition-grid">
+              <div className="nutrition-item">
+                <span>Calories</span>
+                <strong>{recipe.nutrition.calories} kcal</strong>
+              </div>
+              <div className="nutrition-item">
+                <span>Protein</span>
+                <strong>{recipe.nutrition.protein}g</strong>
+              </div>
+              <div className="nutrition-item">
+                <span>Fat</span>
+                <strong>{recipe.nutrition.fat}g</strong>
+              </div>
+              <div className="nutrition-item">
+                <span>Carbs</span>
+                <strong>{recipe.nutrition.carbs}g</strong>
+              </div>
+            </div>
+          </div>
         )}
       </div>
-      <div style={{ textAlign: "left" }}>
-        <h4>Ingredients</h4>
+
+      <div className="recipe-ingredients">
+        <h3>Ingredients</h3>
         <ul>
           {recipe.ingredients?.map((ing, i) => (
             <li key={i}>{ing}</li>
           ))}
         </ul>
-        <h4>Instructions</h4>
+      </div>
+
+      <div className="recipe-instructions">
+        <h3>Instructions</h3>
         <ol>
           {recipe.instructions?.map((step, i) => (
             <li key={i}>{step}</li>
@@ -141,7 +153,7 @@ const LoadingSkeleton = () => (
 const MainContent = ({
   searchQuery,
   favorites = [],
-  setFavorites = () => { },
+  setFavorites = () => {},
   showOnlyFavorites = false,
 }) => {
   const [recipes, setRecipes] = useState([]);
@@ -181,16 +193,16 @@ const MainContent = ({
   const displayedRecipes = showOnlyFavorites
     ? favorites
     : recipes.filter((recipe) => {
-      const searchLower = searchQuery?.toLowerCase() || "";
-      return (
-        recipe.title.toLowerCase().includes(searchLower) ||
-        recipe.ingredients.some((ingredient) =>
-          ingredient.toLowerCase().includes(searchLower)
-        ) ||
-        recipe.cuisine.toLowerCase().includes(searchLower) ||
-        recipe.category.toLowerCase().includes(searchLower)
-      );
-    });
+        const searchLower = searchQuery?.toLowerCase() || "";
+        return (
+          recipe.title.toLowerCase().includes(searchLower) ||
+          recipe.ingredients.some((ingredient) =>
+            ingredient.toLowerCase().includes(searchLower)
+          ) ||
+          recipe.cuisine.toLowerCase().includes(searchLower) ||
+          recipe.category.toLowerCase().includes(searchLower)
+        );
+      });
 
   if (loading) {
     return (
@@ -230,9 +242,7 @@ const MainContent = ({
           />
         ))
       ) : (
-        <div className="no-recipes">
-          No recipes found matching your search!
-        </div>
+        <div className="no-recipes">No recipes found matching your search!</div>
       )}
     </div>
   );
