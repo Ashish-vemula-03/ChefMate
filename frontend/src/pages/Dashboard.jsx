@@ -28,6 +28,9 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [selectedMenu, setSelectedMenu] = useState("Explore"); // Track the selected menu item
+  const [favorites, setFavorites] = useState(
+    JSON.parse(localStorage.getItem("favorites")) || []
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,13 +44,27 @@ export default function Dashboard() {
   const renderSelectedComponent = () => {
     switch (selectedMenu) {
       case "Explore":
-        return <MainContent searchQuery={searchQuery} />; // Render MainContent for Explore
+        return (
+          <MainContent
+            searchQuery={searchQuery}
+            favorites={favorites}
+            setFavorites={setFavorites}
+            showOnlyFavorites={false}
+          />
+        );
+      case "Favorites":
+        return (
+          <MainContent
+            searchQuery={searchQuery}
+            favorites={favorites}
+            setFavorites={setFavorites}
+            showOnlyFavorites={true}
+          />
+        );
       case "My Recipes":
         return <MyRecipes />;
       case "Add Recipe":
         return <AddRecipe />;
-      case "Favorites":
-        return <Favorites />;
       case "What’s in My Kitchen":
         return <WhatsInMyKitchen />;
       case "Healthy Plate":
