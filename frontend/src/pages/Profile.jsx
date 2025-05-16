@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "../services/axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/Profile.css";
+import chefmateLogo from "../assets/img/logo/logo.png";
 import {
   FiEdit2,
   FiUpload,
@@ -259,310 +260,377 @@ export default function Profile() {
   const profileImageSrc =
     profileImagePreview || user?.profilePicture || "/default-profile.png";
 
+  // Add dark mode state
+  const [isDarkMode, setIsDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
+  // Toggle theme function
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    localStorage.setItem("theme", !isDarkMode ? "dark" : "light");
+    document.documentElement.setAttribute(
+      "data-theme",
+      !isDarkMode ? "dark" : "light"
+    );
+  };
+
+  // Set initial theme
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      isDarkMode ? "dark" : "light"
+    );
+  }, []);
+
   return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <div className="profile-picture-container">
-          <img
-            src={profileImageSrc}
-            alt="Profile"
-            className="profile-picture"
+    <div className={`profile-layout ${isDarkMode ? "dark" : "light"}`}>
+      {/* Sidebar */}
+      <div className="profile-sidebar">
+        <div className="sidebar-header">
+          <img 
+            src={chefmateLogo} 
+            alt="ChefMate" 
+            className="logo" 
+            onClick={() => navigate('/dashboard')}
+            style={{ cursor: 'pointer' }}
           />
-          {editMode && (
-            <label className="upload-icon">
-              <FiUpload />
-              <input type="file" accept="image/*" onChange={handleFileChange} />
-            </label>
-          )}
+          <div className="user-brief">
+            <div style={{ position: "relative" }}>
+              <img
+                src={profileImageSrc}
+                alt="Profile"
+                className="sidebar-profile-pic"
+              />
+              {editMode && (
+                <label className="upload-icon-wrapper">
+                  <FiUpload />
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    style={{ display: "none" }}
+                  />
+                </label>
+              )}
+            </div>
+            <h3>{user?.username || "User Name"}</h3>
+            <p>{user?.email || "user@example.com"}</p>
+          </div>
         </div>
-        <div className="profile-info">
-          <h2>{user?.username || "User Name"}</h2>
-          <p>{user?.email || "user@example.com"}</p>
-          <button className="edit-profile-btn" onClick={handleEditToggle}>
-            {editMode ? "Cancel" : "Edit Profile"} <FiEdit2 />
+
+        <div className="sidebar-nav">
+          <button
+            className={`nav-item ${activeTab === "account" ? "active" : ""}`}
+            onClick={() => setActiveTab("account")}
+          >
+            <FiUser /> Account
+          </button>
+          <button
+            className={`nav-item ${activeTab === "personal" ? "active" : ""}`}
+            onClick={() => setActiveTab("personal")}
+          >
+            <FiSettings /> Personal
+          </button>
+          <button
+            className={`nav-item ${activeTab === "security" ? "active" : ""}`}
+            onClick={() => setActiveTab("security")}
+          >
+            <FiLock /> Security
           </button>
         </div>
-        <button className="logout-btn" onClick={handleLogout}>
-          <FiLogOut className="me-2" />
-          Logout
-        </button>
+
+        <div className="sidebar-footer">
+          <button className="logout-btn" onClick={handleLogout}>
+            <FiLogOut /> Logout
+          </button>
+          <button className="delete-account-btn" onClick={handleDeleteAccount}>
+            <FiTrash2 /> Delete Account
+          </button>
+        </div>
       </div>
-      <div className="profile-tabs">
-        <button
-          className={`tab ${activeTab === "account" ? "active" : ""}`}
-          onClick={() => setActiveTab("account")}
-        >
-          <FiUser /> Account
-        </button>
-        <button
-          className={`tab ${activeTab === "personal" ? "active" : ""}`}
-          onClick={() => setActiveTab("personal")}
-        >
-          <FiSettings /> Personal
-        </button>
-        <button
-          className={`tab ${activeTab === "security" ? "active" : ""}`}
-          onClick={() => setActiveTab("security")}
-        >
-          <FiLock /> Security
-        </button>
-      </div>
-      <div className="profile-content">
-        {activeTab === "account" && (
-          <div className="account-settings">
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                name="username"
-                value={
-                  editMode ? editedUser?.username || "" : user?.username || ""
-                }
-                onChange={handleEditedChange}
-                disabled={!editMode}
-                className={errors.username ? "error" : ""}
-              />
-              {errors.username && (
-                <span className="error-message">{errors.username}</span>
-              )}
-            </div>
+      {/* Main Content */}
+      <div className="profile-main">
+        <div className="main-header">
+          <h1>
+            {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Settings
+          </h1>
+          {activeTab === "account" && (
+            <button className="edit-profile-btn" onClick={handleEditToggle}>
+              {editMode ? "Cancel" : "Edit Profile"} <FiEdit2 />
+            </button>
+          )}
+        </div>
 
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={editMode ? editedUser?.email || "" : user?.email || ""}
-                onChange={handleEditedChange}
-                disabled={!editMode}
-                className={errors.email ? "error" : ""}
-              />
-              {errors.email && (
-                <span className="error-message">{errors.email}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label>Mobile Number</label>
-              <input
-                type="text"
-                name="mobile"
-                value={editMode ? editedUser?.mobile || "" : user?.mobile || ""}
-                onChange={handleEditedChange}
-                disabled={!editMode}
-              />
-            </div>
-
-            {profileImagePreview && (
-              <div className="preview-container">
-                <img
-                  src={profileImagePreview}
-                  alt="Preview"
-                  className="preview-image"
+        <div className="profile-main-content">
+          {activeTab === "account" && (
+            <div className="account-settings">
+              <div className="form-group">
+                <label>Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={
+                    editMode ? editedUser?.username || "" : user?.username || ""
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                  className={errors.username ? "error" : ""}
                 />
-                <button
-                  onClick={handleUpload}
-                  className="upload-btn"
-                  disabled={loading}
+                {errors.username && (
+                  <span className="error-message">{errors.username}</span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={editMode ? editedUser?.email || "" : user?.email || ""}
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                  className={errors.email ? "error" : ""}
+                />
+                {errors.email && (
+                  <span className="error-message">{errors.email}</span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>Mobile Number</label>
+                <input
+                  type="text"
+                  name="mobile"
+                  value={
+                    editMode ? editedUser?.mobile || "" : user?.mobile || ""
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                />
+              </div>
+
+              {profileImagePreview && (
+                <div className="preview-container">
+                  <img
+                    src={profileImagePreview}
+                    alt="Preview"
+                    className="preview-image"
+                  />
+                  <button
+                    onClick={handleUpload}
+                    className="upload-btn"
+                    disabled={loading}
+                  >
+                    {loading ? "Uploading..." : "Upload Photo"}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "personal" && (
+            <div className="personal-settings">
+              <div className="form-group">
+                <label>Age</label>
+                <input
+                  type="number"
+                  name="age"
+                  value={editMode ? editedUser?.age || "" : user?.age || ""}
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                  placeholder="Enter your age"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Gender</label>
+                <select
+                  name="gender"
+                  value={
+                    editMode ? editedUser?.gender || "" : user?.gender || ""
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
                 >
-                  {loading ? "Uploading..." : "Upload Photo"}
+                  <option value="">Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Weight (kg)</label>
+                <input
+                  type="number"
+                  name="weight"
+                  value={
+                    editMode ? editedUser?.weight || "" : user?.weight || ""
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                  placeholder="Enter your weight"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Height (cm)</label>
+                <input
+                  type="number"
+                  name="height"
+                  value={
+                    editMode ? editedUser?.height || "" : user?.height || ""
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                  placeholder="Enter your height"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Cooking Skill Level</label>
+                <select
+                  name="cookingSkill"
+                  value={
+                    editMode
+                      ? editedUser?.cookingSkill || ""
+                      : user?.cookingSkill || ""
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                >
+                  <option value="">Select skill level</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Diet Preferences</label>
+                <select
+                  name="dietPreferences"
+                  value={
+                    editMode
+                      ? editedUser?.dietPreferences || []
+                      : user?.dietPreferences || []
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                  multiple
+                  className="diet-preferences-select"
+                >
+                  <option value="Vegetarian">Vegetarian</option>
+                  <option value="Vegan">Vegan</option>
+                  <option value="Keto">Keto</option>
+                  <option value="High-Protein">High-Protein</option>
+                  <option value="Balanced">Balanced</option>
+                </select>
+                <small className="select-hint">
+                  Hold Ctrl/Cmd to select multiple options
+                </small>
+              </div>
+
+              <div className="form-group">
+                <label>Allergies</label>
+                <input
+                  type="text"
+                  name="allergies"
+                  value={
+                    editMode
+                      ? editedUser?.allergies?.join(", ") || ""
+                      : user?.allergies?.join(", ") || ""
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                  placeholder="e.g., Peanuts, Shellfish, etc."
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Preferred Cuisines</label>
+                <input
+                  type="text"
+                  name="preferredCuisines"
+                  value={
+                    editMode
+                      ? editedUser?.preferredCuisines || ""
+                      : user?.preferredCuisines || ""
+                  }
+                  onChange={handleEditedChange}
+                  disabled={!editMode}
+                  placeholder="e.g., Italian, Indian, Chinese, etc."
+                />
+              </div>
+            </div>
+          )}
+          {activeTab === "security" && (
+            <div className="security-settings">
+              <div className="form-group">
+                <label>Current Password</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={passwordData.currentPassword}
+                  onChange={handlePasswordChange}
+                  className={errors.currentPassword ? "error" : ""}
+                />
+                {errors.currentPassword && (
+                  <span className="error-message">
+                    {errors.currentPassword}
+                  </span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>New Password</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={passwordData.newPassword}
+                  onChange={handlePasswordChange}
+                  className={errors.newPassword ? "error" : ""}
+                />
+                {errors.newPassword && (
+                  <span className="error-message">{errors.newPassword}</span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>Confirm New Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordChange}
+                  className={errors.confirmPassword ? "error" : ""}
+                />
+                {errors.confirmPassword && (
+                  <span className="error-message">
+                    {errors.confirmPassword}
+                  </span>
+                )}
+              </div>
+
+              <button
+                onClick={handleChangePassword}
+                className="change-password-btn"
+              >
+                Change Password
+              </button>
+
+              <div className="delete-account-section">
+                <button
+                  onClick={handleDeleteAccount}
+                  className="delete-account-btn"
+                >
+                  <FiTrash2 /> Delete Account
                 </button>
               </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === "personal" && (
-          <div className="personal-settings">
-            <div className="form-group">
-              <label>Age</label>
-              <input
-                type="number"
-                name="age"
-                value={editMode ? editedUser?.age || "" : user?.age || ""}
-                onChange={handleEditedChange}
-                disabled={!editMode}
-                placeholder="Enter your age"
-              />
             </div>
-
-            <div className="form-group">
-              <label>Gender</label>
-              <select
-                name="gender"
-                value={editMode ? editedUser?.gender || "" : user?.gender || ""}
-                onChange={handleEditedChange}
-                disabled={!editMode}
-              >
-                <option value="">Select gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Weight (kg)</label>
-              <input
-                type="number"
-                name="weight"
-                value={editMode ? editedUser?.weight || "" : user?.weight || ""}
-                onChange={handleEditedChange}
-                disabled={!editMode}
-                placeholder="Enter your weight"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Height (cm)</label>
-              <input
-                type="number"
-                name="height"
-                value={editMode ? editedUser?.height || "" : user?.height || ""}
-                onChange={handleEditedChange}
-                disabled={!editMode}
-                placeholder="Enter your height"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Cooking Skill Level</label>
-              <select
-                name="cookingSkill"
-                value={
-                  editMode
-                    ? editedUser?.cookingSkill || ""
-                    : user?.cookingSkill || ""
-                }
-                onChange={handleEditedChange}
-                disabled={!editMode}
-              >
-                <option value="">Select skill level</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Diet Preferences</label>
-              <select
-                name="dietPreferences"
-                value={
-                  editMode
-                    ? editedUser?.dietPreferences || []
-                    : user?.dietPreferences || []
-                }
-                onChange={handleEditedChange}
-                disabled={!editMode}
-                multiple
-                className="diet-preferences-select"
-              >
-                <option value="Vegetarian">Vegetarian</option>
-                <option value="Vegan">Vegan</option>
-                <option value="Keto">Keto</option>
-                <option value="High-Protein">High-Protein</option>
-                <option value="Balanced">Balanced</option>
-              </select>
-              <small className="select-hint">
-                Hold Ctrl/Cmd to select multiple options
-              </small>
-            </div>
-
-            <div className="form-group">
-              <label>Allergies</label>
-              <input
-                type="text"
-                name="allergies"
-                value={
-                  editMode
-                    ? editedUser?.allergies?.join(", ") || ""
-                    : user?.allergies?.join(", ") || ""
-                }
-                onChange={handleEditedChange}
-                disabled={!editMode}
-                placeholder="e.g., Peanuts, Shellfish, etc."
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Preferred Cuisines</label>
-              <input
-                type="text"
-                name="preferredCuisines"
-                value={
-                  editMode
-                    ? editedUser?.preferredCuisines || ""
-                    : user?.preferredCuisines || ""
-                }
-                onChange={handleEditedChange}
-                disabled={!editMode}
-                placeholder="e.g., Italian, Indian, Chinese, etc."
-              />
-            </div>
-          </div>
-        )}
-        {activeTab === "security" && (
-          <div className="security-settings">
-            <div className="form-group">
-              <label>Current Password</label>
-              <input
-                type="password"
-                name="currentPassword"
-                value={passwordData.currentPassword}
-                onChange={handlePasswordChange}
-                className={errors.currentPassword ? "error" : ""}
-              />
-              {errors.currentPassword && (
-                <span className="error-message">{errors.currentPassword}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label>New Password</label>
-              <input
-                type="password"
-                name="newPassword"
-                value={passwordData.newPassword}
-                onChange={handlePasswordChange}
-                className={errors.newPassword ? "error" : ""}
-              />
-              {errors.newPassword && (
-                <span className="error-message">{errors.newPassword}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label>Confirm New Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={passwordData.confirmPassword}
-                onChange={handlePasswordChange}
-                className={errors.confirmPassword ? "error" : ""}
-              />
-              {errors.confirmPassword && (
-                <span className="error-message">{errors.confirmPassword}</span>
-              )}
-            </div>
-
-            <button
-              onClick={handleChangePassword}
-              className="change-password-btn"
-            >
-              Change Password
-            </button>
-
-            <div className="delete-account-section">
-              <button
-                onClick={handleDeleteAccount}
-                className="delete-account-btn"
-              >
-                <FiTrash2 /> Delete Account
-              </button>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       {editMode && (
         <div className="profile-actions">

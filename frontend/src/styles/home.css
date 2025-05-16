@@ -94,7 +94,6 @@
   background: rgba(255, 215, 0, 0.1);
 }
 
-/* Remove duplicate .nav-link::after rule */
 .nav-link::after {
   content: "";
   position: absolute;
@@ -108,15 +107,6 @@
   border-radius: 2px;
 }
 
-/* Remove duplicate .btn-primary rule */
-.btn-primary {
-  transition: all 0.3s ease;
-  background: var(--primary) !important;
-  border-color: var(--primary) !important;
-  color: #000 !important;
-}
-
-/* Remove duplicate .feature-card rule */
 .nav-link:hover::after {
   width: 80%;
 }
@@ -519,16 +509,16 @@ body {
 }
 
 .hero-logo.scrolled {
-  opacity: 0;
-  visibility: hidden;
+  width: 45px;
+  top: 15px;
+  left: 40px;
+  transform: translate(0, 0);
 }
 
 .nav-logo {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.4s ease;
-  height: 45px;
-  width: auto;
+  transition: opacity 0.3s ease;
 }
 
 .nav-logo.visible {
@@ -538,21 +528,32 @@ body {
 
 /* Typing Animation */
 .typing-text-container {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
 }
 
 .typing-text {
-  display: inline-block;
+  display: block;
   opacity: 0;
   animation: fadeIn 1s ease forwards;
   animation-delay: 0.5s;
+  text-align: center;
+  width: 100%;
 }
 
 .typing-text-delay {
   opacity: 0;
   animation: fadeIn 1s ease forwards;
   animation-delay: 1.5s;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 @keyframes fadeIn {
@@ -566,13 +567,7 @@ body {
   }
 }
 
-/* Remove all other typing-related animations and styles */
-.typing-text-delay {
-  opacity: 0;
-  animation: fadeIn 1s ease forwards;
-  animation-delay: 4s;
-}
-
+/* Remove these duplicate animations */
 @keyframes typing {
   from {
     width: 0;
@@ -738,7 +733,6 @@ html.dark {
 
 .dark .testimonial-card {
   background: var(--bg-secondary);
-  border-color: var(--border-color);
 }
 
 .dark .testimonial-card:hover {
@@ -758,7 +752,6 @@ html.dark {
     rgba(26, 32, 44, 0.98),
     rgba(45, 55, 72, 0.98)
   );
-  border-bottom: 1px solid var(--border-color);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -799,7 +792,345 @@ html.dark {
 .dark .testimonial-card,
 .dark .contact-section form {
   background: var(--bg-primary);
+}
+
+.dark .feature-card:hover,
+.dark .testimonial-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  border-color: var(--primary);
+}
+
+/* Dark mode text styles */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+.dark .display-4,
+.dark .display-5,
+.dark .display-6 {
+  color: white !important;
+}
+
+.dark p,
+.dark .lead {
+  color: var(--text-secondary) !important;
+}
+
+/* Dark mode form elements */
+.dark .form-control {
+  background: var(--card-bg);
   border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.dark .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.2);
+}
+
+/* Dark mode gradients */
+.dark .brand-text {
+  background: linear-gradient(45deg, var(--text-primary), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .accent-text {
+  background: linear-gradient(45deg, var(--primary), var(--primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .text-gradient {
+  background: linear-gradient(
+    45deg,
+    var(--text-primary),
+    var(--text-secondary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Dark mode button styles */
+.dark .btn-primary {
+  background: var(--gradient-primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--bg-secondary) !important;
+}
+
+.dark .btn-primary:hover {
+  background: var(--gradient-hover) !important;
+  box-shadow: 0 6px 20px var(--shadow-primary);
+}
+
+/* Dark mode icon button */
+.dark .icon-button {
+  color: white;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark .icon-button:hover {
+  background: var(--bg-glass);
+  transform: translateY(-2px);
+}
+.dark ul li {
+  color: white;
+}
+.dark body {
+  background-color: var(--bg-primary);
+}
+
+.dark #contact input {
+  background-color: rgb(175, 172, 172);
+  color: white;
+}
+
+.dark #contact textarea {
+  background-color: rgb(175, 172, 172);
+  color: white;
+}
+/* Update the home section container */
+#home {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+#home .container-fluid {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+#home .text-center {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: var(--text-title);
+  }
+}
+.hero-logo.scrolled {
+  width: 45px;
+  top: 15px;
+  left: 40px;
+  transform: translate(0, 0);
+}
+
+.nav-logo {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.nav-logo.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Update existing section styles */
+section {
+  background-color: var(--main-bg) !important;
+  transition: all 0.6s ease;
+}
+
+h1,
+h2,
+.display-4,
+.display-5,
+.display-6 {
+  color: var(--text-title) !important;
+}
+
+p,
+.lead {
+  color: var(--text-paragraph) !important;
+}
+
+.text-success {
+  color: var(--success-accent) !important;
+}
+
+.badge {
+  background-color: var(--header-bg) !important;
+  color: var(--text-title) !important;
+}
+
+.form-control {
+  border-color: var(--icon-border);
+}
+
+.form-control:focus {
+  border-color: var(--button-hover);
+  box-shadow: 0 0 0 0.25rem rgba(165, 109, 61, 0.25);
+}
+
+.brand-text {
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 1px;
+  background: linear-gradient(45deg, var(--text-title), var(--button-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.accent-text {
+  color: var(--button-hover);
+  font-weight: 800;
+  background: linear-gradient(45deg, var(--button-hover), var(--icon-border));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Remove these sections */
+/* Dark mode variables */
+/* Add this at the root level */
+html.dark {
+  background-color: var(--bg-primary);
+}
+
+/* Update dark mode styles */
+.dark {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --bg-glass: rgba(0, 0, 0, 0.3);
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --card-bg: rgba(45, 55, 72, 0.8);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --main-bg: #1a1a1a;
+}
+
+/* Update section backgrounds in dark mode */
+.dark section {
+  background-color: var(--bg-primary) !important;
+}
+
+.dark section.bg-white {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark section.bg-light {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Update gradient overlays in dark mode */
+.dark .gradient-overlay-left {
+  background: linear-gradient(to right, var(--bg-primary), rgba(26, 32, 44, 0));
+}
+
+.dark .gradient-overlay-right {
+  background: linear-gradient(to left, var(--bg-primary), rgba(26, 32, 44, 0));
+}
+
+/* Update testimonials section in dark mode */
+.dark #testimonials {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark .testimonial-card {
+  background: var(--bg-secondary);
+}
+
+.dark .testimonial-card:hover {
+  background: rgba(45, 55, 72, 0.9);
+  border-color: var(--primary);
+}
+
+/* Dark mode styles for sections */
+.dark section {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Dark mode header styles */
+.dark .home-header {
+  background: linear-gradient(
+    to right,
+    rgba(26, 32, 44, 0.98),
+    rgba(45, 55, 72, 0.98)
+  );
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.dark .home-header.scrolled {
+  background: linear-gradient(
+    to right,
+    rgba(26, 32, 44, 0.95),
+    rgba(45, 55, 72, 0.95)
+  );
+}
+
+/* Dark mode navigation styles */
+.dark .nav-link {
+  color: var(--text-secondary) !important;
+}
+
+.dark .nav-link:hover {
+  color: var(--primary) !important;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.dark .nav-link.active {
+  color: var(--primary) !important;
+  background: rgba(255, 215, 0, 0.15);
+}
+
+/* Dark mode hero section */
+.dark .hero-section {
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+}
+
+.dark .hero-section::before {
+  opacity: 0.1;
+}
+
+/* Dark mode cards */
+.dark .feature-card,
+.dark .testimonial-card,
+.dark .contact-section form {
+  background: var(--bg-primary);
 }
 
 .dark .feature-card:hover,

@@ -195,26 +195,25 @@ const Home = () => {
         className="min-vh-100 d-flex align-items-center justify-content-center"
       >
         <div className="container-fluid">
-          <div className="text-center">
-            <div className="hero-logo-container">
+          <div className="text-center d-flex flex-column align-items-center">
+            <div className="hero-logo-container mb-4">
               <img
                 src={logo}
                 alt="ChefMate Logo"
-                className="hero-logo"
                 id="floating-logo"
+                className="hero-logo"
               />
             </div>
-            <div className="typing-text-container">
-              <h1 className="display-4 fw-bold lh-1 text-body-emphasis typing-text">
-                Your Personal AI Chef Assistant
-              </h1>
-            </div>
-            <p className="lead mt-3 typing-text-delay">
+            <h1 className="display-4 fw-bold text-center mb-3 mt-1">
+              Your Personal AI Chef Assistant
+            </h1>
+            <p className="lead text-center mb-4">
               Discover personalized recipes, plan your meals, and get cooking
               guidance tailored to your preferences. ChefMate uses AI to help
               you create delicious meals that match your dietary needs and
               cooking skills.
             </p>
+
             <div className="d-grid gap-2 d-md-flex justify-content-center mt-4">
               <Link to="/register">
                 <button
