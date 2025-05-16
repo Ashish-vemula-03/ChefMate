@@ -37,7 +37,7 @@ export default function DashboardNavbar({ setSearchQuery }) {
     <nav className="dashboard-navbar">
       <div className="navbar-left">
         <img src={chefMateLogo} alt="ChefMate Logo" className="logo" />
-        <p className="fw-bold fs-4 mx-2 home-logo text-uppercase mb-0 brand-text">
+        <p className="fw-bold fs-4 home-logo text-uppercase mb-0 brand-text">
           Chef<span className="accent-text">Mate</span>
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function DashboardNavbar({ setSearchQuery }) {
         </button>
 
         <button
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate("/profile")}
           className="profile-button"
           aria-label="Go to Profile"
         >
