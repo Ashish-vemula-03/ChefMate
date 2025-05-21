@@ -1,76 +1,134 @@
 import React, { useState } from "react";
-import { Input, Button } from "antd"; // For simplicity, we will use Ant Design for UI components
-import { PlusCircle, Trash2 } from "lucide-react"; // Icon for adding and removing ingredients
-import "../../styles/WhatsInMyKitchen.css";
+import axios from "axios";
+import "./WhatsInMyKitchen.css";
 
-const WhatsInMyKitchen = () => {
-  const [ingredient, setIngredient] = useState("");
-  const [ingredientsList, setIngredientsList] = useState([]);
+const RecipeGenerator = () => {
+  const [ingredients, setIngredients] = useState("");
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Function to handle adding ingredients
-  const addIngredient = () => {
-    if (ingredient.trim() !== "") {
-      setIngredientsList([...ingredientsList, ingredient]);
-      setIngredient(""); // Clear input after adding
+  const handleGenerateRecipe = async (e) => {
+    e.preventDefault();
+    if (!ingredients.trim()) {
+      setError("Please add some ingredients first!");
+      return;
     }
-  };
 
-  // Function to handle removing an ingredient
-  const removeIngredient = (index) => {
-    const updatedList = ingredientsList.filter((_, i) => i !== index);
-    setIngredientsList(updatedList);
-  };
+    setLoading(true);
+    setError(null);
+    setRecipe(null); // Changed from setRecipes([]) to setRecipe(null)
 
-  // Handle Enter key press for adding ingredient
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      addIngredient();
+    try {
+      const ingredientsList = ingredients.split(",").map(i => i.trim()).filter(Boolean);
+      const response = await axios.post("http://localhost:5000/api/recipes/generate", {
+        ingredients: ingredientsList
+      });
+      
+      if (response.data.error) {
+        throw new Error(response.data.error);
+      }
+      
+      setRecipe(response.data); // Changed from setRecipes([response.data]) to setRecipe(response.data)
+    } catch (err) {
+      console.error('Error details:', err.response?.data || err.message);
+      setError(err.response?.data?.error || "Failed to generate recipe. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="whats-in-my-kitchen">
-      <h2>What's In My Kitchen</h2>
-
-      {/* Ingredient Input Section */}
-      <div className="ingredient-input">
-        <Input
-          value={ingredient}
-          onChange={(e) => setIngredient(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Add an ingredient"
-          className="ingredient-input-field"
+    <div className="recipe-generator">
+      <form onSubmit={handleGenerateRecipe} className="recipe-form">
+        <textarea
+          className="ingredient-input"
+          placeholder="Enter ingredients separated by commas (e.g., tomatoes, onions, chicken)"
+          value={ingredients}
+          onChange={(e) => setIngredients(e.target.value)}
         />
-        <Button
-          onClick={addIngredient}
-          icon={<PlusCircle size={20} />}
-          className="add-ingredient-btn"
-        >
-          Add
-        </Button>
-      </div>
+        <button type="submit" disabled={loading} className="generate-btn">
+          {loading ? "Generating..." : "Generate Recipe"}
+        </button>
+      </form>
 
-      {/* Ingredients List Section */}
-      <div className="ingredient-list">
-        <h3>Pantry Ingredients:</h3>
-        <ul>
-          {ingredientsList.map((ingredient, index) => (
-            <li key={index} className="ingredient-item">
-              <span>{ingredient}</span>
-              <Button
-                onClick={() => removeIngredient(index)}
-                icon={<Trash2 size={16} />}
-                className="remove-ingredient-btn"
-                danger
-              >
-                Remove
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {loading && <p className="loading-text">Creating your recipe...</p>}
+      {error && <p className="error-text">{error}</p>}
+
+      {recipe && (
+        <div className="recipe-card">
+          {recipe.imageUrl && (
+            <div className="recipe-image">
+              <img src={recipe.imageUrl} alt={recipe.title} />
+            </div>
+          )}
+          <h3 className="recipe-title">{recipe.title}</h3>
+          <div className="recipe-meta">
+            <span className="meta-item">
+              <i className="fas fa-globe"></i> {recipe.cuisine}
+            </span>
+            <span className="meta-item">
+              <i className="fas fa-signal"></i> {recipe.difficulty}
+            </span>
+            <span className="meta-item">
+              <i className="fas fa-clock"></i> Prep: {recipe.prepTime} mins
+            </span>
+            <span className="meta-item">
+              <i className="fas fa-fire"></i> Cook: {recipe.cookTime} mins
+            </span>
+          </div>
+          
+          <div className="recipe-section">
+            <h4 className="section-title">
+              <i className="fas fa-list"></i> Ingredients
+            </h4>
+            <ul className="ingredients-list">
+              {recipe.ingredients.map((item, i) => (
+                <li key={i} className="ingredient-item">{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="recipe-section">
+            <h4 className="section-title">
+              <i className="fas fa-tasks"></i> Instructions
+            </h4>
+            <ol className="instructions-list">
+              {recipe.instructions.map((step, i) => (
+                <li key={i} className="instruction-item">{step}</li>
+              ))}
+            </ol>
+          </div>
+
+          {recipe.nutrition && (
+            <div className="nutrition-info">
+              <h4 className="section-title">
+                <i className="fas fa-heartbeat"></i> Nutrition Information
+              </h4>
+              <div className="nutrition-grid">
+                <div className="nutrition-item">
+                  <span className="nutrition-label">Calories:</span>
+                  <span className="nutrition-value">{recipe.nutrition.calories}kcal</span>
+                </div>
+                <div className="nutrition-item">
+                  <span className="nutrition-label">Protein:</span>
+                  <span className="nutrition-value">{recipe.nutrition.protein}g</span>
+                </div>
+                <div className="nutrition-item">
+                  <span className="nutrition-label">Fat:</span>
+                  <span className="nutrition-value">{recipe.nutrition.fat}g</span>
+                </div>
+                <div className="nutrition-item">
+                  <span className="nutrition-label">Carbs:</span>
+                  <span className="nutrition-value">{recipe.nutrition.carbs}g</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-export default WhatsInMyKitchen;
+export default RecipeGenerator;
