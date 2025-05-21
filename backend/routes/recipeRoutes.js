@@ -1,10 +1,11 @@
 const express = require("express");
 const multer = require("multer");
 const Recipe = require("../models/Recipe");
-const upload = require("../middlewares/upload"); // ✅ Added multer upload middleware
+const upload = require("../middlewares/upload");
 const User = require("../models/User");
 const router = express.Router();
 const { getRecommendations } = require("../controllers/recipeController");
+const { generateRecipesFromIngredients } = require("../services/geminiService");
 
 router.get('/recommendations/:userId', getRecommendations);
 
@@ -406,5 +407,26 @@ router.get("/search", async (req, res) => {
   }
 });
 
+
+// Recipe Generation Route
+router.post('/generate', async (req, res) => {
+  try {
+    const { ingredients } = req.body;
+    
+    if (!ingredients || !Array.isArray(ingredients) || ingredients.length === 0) {
+      return res.status(400).json({ 
+        error: 'Please provide a valid list of ingredients' 
+      });
+    }
+
+    const recipe = await generateRecipesFromIngredients(ingredients);
+    res.json(recipe);
+  } catch (error) {
+    console.error('Recipe generation error:', error);
+    res.status(500).json({ 
+      error: error.message || 'Failed to generate recipe' 
+    });
+  }
+});
 
 module.exports = router;
