@@ -71,16 +71,26 @@ const RecipeDetails = ({ recipe, onBack, onFavorite, isFavorite }) => (
             <strong>Category:</strong> {recipe.category}
           </div>
           <div className="meta-item">
+            <strong>Diet Type:</strong> {recipe.dietType}
+          </div>
+          <div className="meta-item">
+            <strong>Meal Type:</strong> {recipe.mealType}
+          </div>
+          <div className="meta-item">
+            <strong>Region:</strong> {recipe.mainCourseRegion}
+          </div>
+          <div className="meta-item">
             <strong>Prep Time:</strong> {recipe.prepTime} mins
           </div>
           <div className="meta-item">
             <strong>Cook Time:</strong> {recipe.cookTime} mins
           </div>
-          {recipe.difficulty && (
-            <div className="meta-item">
-              <strong>Difficulty:</strong> {recipe.difficulty}
-            </div>
-          )}
+          <div className="meta-item">
+            <strong>Servings:</strong> {recipe.servings}
+          </div>
+          <div className="meta-item">
+            <strong>Difficulty:</strong> {recipe.difficulty}
+          </div>
         </div>
 
         {recipe.description && (
@@ -153,7 +163,7 @@ const LoadingSkeleton = () => (
 const MainContent = ({
   searchQuery,
   favorites = [],
-  setFavorites = () => {},
+  setFavorites = () => { },
   showOnlyFavorites = false,
 }) => {
   const [recipes, setRecipes] = useState([]);
@@ -193,16 +203,16 @@ const MainContent = ({
   const displayedRecipes = showOnlyFavorites
     ? favorites
     : recipes.filter((recipe) => {
-        const searchLower = searchQuery?.toLowerCase() || "";
-        return (
-          recipe.title.toLowerCase().includes(searchLower) ||
-          recipe.ingredients.some((ingredient) =>
-            ingredient.toLowerCase().includes(searchLower)
-          ) ||
-          recipe.cuisine.toLowerCase().includes(searchLower) ||
-          recipe.category.toLowerCase().includes(searchLower)
-        );
-      });
+      const searchLower = searchQuery?.toLowerCase() || "";
+      return (
+        recipe.title.toLowerCase().includes(searchLower) ||
+        recipe.ingredients.some((ingredient) =>
+          ingredient.toLowerCase().includes(searchLower)
+        ) ||
+        recipe.cuisine.toLowerCase().includes(searchLower) ||
+        recipe.category.toLowerCase().includes(searchLower)
+      );
+    });
 
   if (loading) {
     return (
