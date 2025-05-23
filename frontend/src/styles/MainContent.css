@@ -672,3 +672,166 @@ img {
     background-position: 468px 0;
   }
 }
+
+/* Add these styles to your existing MainContent.css file */
+
+.search-container {
+  width: 100%;
+  padding: 1rem 1rem 0.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--bg-color, #fff);
+}
+
+.search-filters {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--input-bg, #f5f5f5);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-bar:focus-within {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--primary, #ffc107);
+}
+
+.search-icon {
+  color: var(--text-muted, #6c757d);
+  margin-right: 0.75rem;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--text-color, #212529);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted, #6c757d);
+}
+
+/* Filter dropdown styles */
+.filter-dropdown-container {
+  position: relative;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--input-bg, #f5f5f5);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--text-color, #212529);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-button:hover {
+  background-color: var(--input-bg-hover, #e9ecef);
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: var(--bg-color, #fff);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 100;
+  border: 1px solid var(--border-color, #dee2e6);
+}
+
+.filter-category {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color, #dee2e6);
+}
+
+.filter-category:last-child {
+  border-bottom: none;
+}
+
+.filter-category-label {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: var(--text-muted, #6c757d);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.filter-option {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-option:hover {
+  background-color: var(--input-bg-hover, #e9ecef);
+}
+
+.filter-option.active {
+  background-color: var(--primary-light, rgba(255, 193, 7, 0.2));
+  color: var(--primary-dark, #d39e00);
+  font-weight: 500;
+}
+
+/* Dark mode support */
+.dark .search-bar,
+.dark .filter-button {
+  background-color: var(--dark-input-bg, #2a2a2a);
+  color: var(--dark-text-color, #e9ecef);
+}
+
+.dark .search-input {
+  color: var(--dark-text-color, #e9ecef);
+}
+
+.dark .search-input::placeholder,
+.dark .search-icon {
+  color: var(--dark-text-muted, #adb5bd);
+}
+
+.dark .filter-dropdown {
+  background-color: var(--dark-bg-color, #343a40);
+  border-color: var(--dark-border-color, #495057);
+}
+
+.dark .filter-category {
+  border-color: var(--dark-border-color, #495057);
+}
+
+.dark .filter-category-label {
+  color: var(--dark-text-muted, #adb5bd);
+}
+
+.dark .filter-option:hover {
+  background-color: var(--dark-input-bg-hover, #3a3a3a);
+}
+
+.dark .filter-option.active {
+  background-color: rgba(255, 193, 7, 0.15);
+  color: var(--primary, #ffc107);
+}

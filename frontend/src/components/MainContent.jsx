@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../services/axios";
-import { Clock } from "lucide-react";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { Clock, ChevronDown } from "lucide-react";
+import { FaHeart, FaRegHeart, FaSearch, FaFilter } from "react-icons/fa";
 import "../styles/MainContent.css";
 
 // Recipe Card
@@ -169,6 +169,32 @@ const MainContent = ({
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery || "");
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("");
+
+  // Filter categories
+  const filterCategories = [
+    { label: "All", value: "" },
+    { label: "Diet Type", options: [
+      { label: "Veg", value: "category:veg" },
+      { label: "Non-veg", value: "category:non-veg" },
+      { label: "Balanced Diet", value: "dietType:balanced" },
+      { label: "Low Diet", value: "dietType:low" },
+      { label: "High Diet", value: "dietType:high" },
+    ]},
+    { label: "Region", options: [
+      { label: "South-Indian", value: "mainCourseRegion:South" },
+      { label: "North-Indian", value: "mainCourseRegion:North" },
+      { label: "East-Indian", value: "mainCourseRegion:East" },
+      { label: "West-Indian", value: "mainCourseRegion:West" },
+    ]},
+    { label: "Meal Type", options: [
+      { label: "Breakfast/Tiffin", value: "mealType:breakfast" },
+      { label: "Lunch", value: "mealType:lunch" },
+      { label: "Dinner", value: "mealType:dinner" },
+    ]},
+  ];
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -186,6 +212,11 @@ const MainContent = ({
   }, []);
 
   useEffect(() => {
+    // Update local search query when prop changes
+    setLocalSearchQuery(searchQuery || "");
+  }, [searchQuery]);
+
+  useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
@@ -200,18 +231,57 @@ const MainContent = ({
     });
   };
 
+  const handleSearchChange = (e) => {
+    setLocalSearchQuery(e.target.value);
+  };
+
+  const handleFilterSelect = (filterValue) => {
+    setSelectedFilter(filterValue);
+    setShowFilterDropdown(false);
+  };
+
+  const toggleFilterDropdown = () => {
+    setShowFilterDropdown(!showFilterDropdown);
+  };
+
   const displayedRecipes = showOnlyFavorites
     ? favorites
     : recipes.filter((recipe) => {
-      const searchLower = searchQuery?.toLowerCase() || "";
-      return (
+      // Text search filter
+      const searchLower = localSearchQuery.toLowerCase();
+      const matchesSearch = searchLower === "" || (
         recipe.title.toLowerCase().includes(searchLower) ||
         recipe.ingredients.some((ingredient) =>
           ingredient.toLowerCase().includes(searchLower)
         ) ||
-        recipe.cuisine.toLowerCase().includes(searchLower) ||
-        recipe.category.toLowerCase().includes(searchLower)
+        recipe.cuisine?.toLowerCase().includes(searchLower) ||
+        recipe.category?.toLowerCase().includes(searchLower)
       );
+
+      // Category filter
+      let matchesFilter = true;
+      if (selectedFilter) {
+        const [filterType, filterValue] = selectedFilter.split(':');
+        
+        switch(filterType) {
+          case 'category':
+            matchesFilter = recipe.category?.toLowerCase().includes(filterValue.toLowerCase());
+            break;
+          case 'dietType':
+            matchesFilter = recipe.dietType?.toLowerCase().includes(filterValue.toLowerCase());
+            break;
+          case 'mainCourseRegion':
+            matchesFilter = recipe.mainCourseRegion?.toLowerCase().includes(filterValue.toLowerCase());
+            break;
+          case 'mealType':
+            matchesFilter = recipe.mealType?.toLowerCase().includes(filterValue.toLowerCase());
+            break;
+          default:
+            matchesFilter = true;
+        }
+      }
+
+      return matchesSearch && matchesFilter;
     });
 
   if (loading) {
@@ -238,23 +308,82 @@ const MainContent = ({
     );
   }
 
-  // Otherwise, show list
+  // Otherwise, show list with search bar and filter dropdown
   return (
-    <div className="main-content">
-      {displayedRecipes.length > 0 ? (
-        displayedRecipes.map((recipe) => (
-          <RecipeCard
-            key={recipe._id}
-            recipe={recipe}
-            isFavorite={favorites.some((fav) => fav._id === recipe._id)}
-            onToggleFavorite={handleToggleFavorite}
-            onClick={setSelectedRecipe}
-          />
-        ))
-      ) : (
-        <div className="no-recipes">No recipes found matching your search!</div>
-      )}
-    </div>
+    <>
+      <div className="search-container">
+        <div className="search-filters">
+          <div className="search-bar">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search recipes, ingredients, cuisines..."
+              value={localSearchQuery}
+              onChange={handleSearchChange}
+              className="search-input"
+            />
+          </div>
+          
+          <div className="filter-dropdown-container">
+            <button 
+              className="filter-button" 
+              onClick={toggleFilterDropdown}
+              aria-expanded={showFilterDropdown}
+              aria-haspopup="true"
+            >
+              <FaFilter />
+              <span>{selectedFilter ? filterCategories.flatMap(cat => cat.options || []).find(opt => opt.value === selectedFilter)?.label || "Filter" : "Filter"}</span>
+              <ChevronDown size={16} />
+            </button>
+            
+            {showFilterDropdown && (
+              <div className="filter-dropdown">
+                {filterCategories.map((category) => (
+                  <div key={category.label} className="filter-category">
+                    {category.label !== "All" ? (
+                      <div className="filter-category-label">{category.label}</div>
+                    ) : (
+                      <div 
+                        className={`filter-option ${selectedFilter === "" ? "active" : ""}`}
+                        onClick={() => handleFilterSelect("")}
+                      >
+                        All Recipes
+                      </div>
+                    )}
+                    
+                    {category.options?.map((option) => (
+                      <div 
+                        key={option.value} 
+                        className={`filter-option ${selectedFilter === option.value ? "active" : ""}`}
+                        onClick={() => handleFilterSelect(option.value)}
+                      >
+                        {option.label}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      <div className="main-content">
+        {displayedRecipes.length > 0 ? (
+          displayedRecipes.map((recipe) => (
+            <RecipeCard
+              key={recipe._id}
+              recipe={recipe}
+              isFavorite={favorites.some((fav) => fav._id === recipe._id)}
+              onToggleFavorite={handleToggleFavorite}
+              onClick={setSelectedRecipe}
+            />
+          ))
+        ) : (
+          <div className="no-recipes">No recipes found matching your criteria!</div>
+        )}
+      </div>
+    </>
   );
 };
 

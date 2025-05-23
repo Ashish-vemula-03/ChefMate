@@ -22,8 +22,13 @@ const Home = () => {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [darkMode, setDarkMode] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem("authToken");
+    setIsAuthenticated(!!token);
+    
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       setDarkMode(true);
@@ -101,7 +106,12 @@ const Home = () => {
   }, []);
 
   const handleGetStarted = () => {
-    navigate("/register");
+    // Redirect to dashboard if authenticated, otherwise to register
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    } else {
+      navigate("/register");
+    }
   };
 
   return (
@@ -178,14 +188,32 @@ const Home = () => {
               >
                 {darkMode ? <Sun size={24} /> : <Moon size={24} />}
               </button>
-              <Link to="/login" className="btn btn-primary me-2">
-                <FaSignInAlt className="me-2" />
-                Login
-              </Link>
-              <Link to="/register" className="btn btn-primary">
-                <FaUser className="me-2" />
-                Sign Up
-              </Link>
+              
+              {isAuthenticated ? (
+                // Show Dashboard and Profile buttons for authenticated users
+                <>
+                  <Link to="/dashboard" className="btn btn-primary me-2">
+                    <FaRocket className="me-2" />
+                    Dashboard
+                  </Link>
+                  <Link to="/profile" className="btn btn-primary">
+                    <FaUser className="me-2" />
+                    Profile
+                  </Link>
+                </>
+              ) : (
+                // Show Login and Sign Up buttons for non-authenticated users
+                <>
+                  <Link to="/login" className="btn btn-primary me-2">
+                    <FaSignInAlt className="me-2" />
+                    Login
+                  </Link>
+                  <Link to="/register" className="btn btn-primary">
+                    <FaUser className="me-2" />
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -215,19 +243,20 @@ const Home = () => {
             </p>
 
             <div className="d-grid gap-2 d-md-flex justify-content-center mt-4">
-              <Link to="/register">
-                <button
-                  onClick={handleGetStarted}
-                  className="btn btn-primary btn-lg px-4 me-md-2 fw-bold"
-                >
-                  <FaRocket className="me-2" />
-                  Get Started
-                </button>
-              </Link>
+              {/* Update the Get Started button to conditionally navigate */}
+              <button
+                onClick={handleGetStarted}
+                className="btn btn-primary btn-lg px-4 me-md-2 fw-bold"
+              >
+                <FaRocket className="me-2" />
+                {isAuthenticated ? "Go to Dashboard" : "Get Started"}
+              </button>
             </div>
           </div>
         </div>
       </section>
+      
+      {/* Rest of the component remains unchanged */}
       <section
         id="features"
         className="min-vh-100 d-flex align-items-center bg-white px-5"

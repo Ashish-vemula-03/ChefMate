@@ -11,7 +11,7 @@
   border-right: 1px solid rgba(255, 215, 0, 0.15);
   height: calc(100vh - 60px);
   transition: all 0.3s ease;
-  margin-top: 60px;
+  margin-top: 0px;
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
   width: 280px;
   z-index: 50;
@@ -128,4 +128,46 @@
 .sidebar-collapsed .sidebar-item:hover .tooltip {
   visibility: visible;
   opacity: 1;
+}
+
+/* Add these styles at the end of the file */
+
+.sidebar-header {
+  margin-bottom: 20px;
+  padding: 0 8px;
+}
+
+/* Update the sidebar-brand class */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-brand:hover {
+  opacity: 0.8;
+}
+
+.sidebar-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.sidebar-brand-text {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.accent-text {
+  color: #ffa500;
+}
+
+.sidebar-collapsed .sidebar-logo {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
 }

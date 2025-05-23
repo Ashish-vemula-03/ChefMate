@@ -1,6 +1,8 @@
 // src/components/DashboardSidebar.jsx
 
 import "../styles/DashboardSidebar.css";
+import chefMateLogo from "../assets/img/logo/logo2.png";
+import { useNavigate } from "react-router-dom";
 import {
   Utensils,
   BookOpenCheck,
@@ -30,6 +32,8 @@ const DashboardSidebar = ({
   selectedMenu,
   setSelectedMenu,
 }) => {
+  const navigate = useNavigate();
+  
   const navItems = [
     { label: "Explore", icon: Utensils },
     { label: "My Recipes", icon: BookOpenCheck },
@@ -58,6 +62,22 @@ const DashboardSidebar = ({
         "dark"
       )}
     >
+      {/* Logo and Brand Name */}
+      <div className="sidebar-header">
+        <div 
+          className="sidebar-brand" 
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
+        >
+          <img src={chefMateLogo} alt="ChefMate Logo" className="sidebar-logo" />
+          {parentSidebarState && (
+            <p className="fw-bold fs-4 sidebar-brand-text mb-0">
+              Chef<span className="accent-text">Mate</span>
+            </p>
+          )}
+        </div>
+      </div>
+      
       <div className="px-2 space-y-2 pb-6">
         {navItems.map(({ label, icon: Icon }) => (
           <div
