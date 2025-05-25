@@ -4,13 +4,14 @@ import ".././../styles/ImageSearch.css";
 
 const ImageSearch = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null); // Add this state
+  const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [ingredients, setIngredients] = useState([]);
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const [showCamera, setShowCamera] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const handleImageChange = (file) => {
     if (file) {
@@ -37,38 +38,6 @@ const ImageSearch = () => {
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
-  };
-
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-      setShowCamera(true);
-    } catch (err) {
-      setError("Failed to access camera");
-    }
-  };
-
-  const captureImage = () => {
-    if (videoRef.current) {
-      const canvas = document.createElement("canvas");
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      canvas.getContext("2d").drawImage(videoRef.current, 0, 0);
-      canvas.toBlob((blob) => {
-        handleImageChange(blob); // This will now set both preview and selectedImage
-        stopCamera();
-      }, "image/jpeg");
-    }
-  };
-
-  const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
-    }
-    setShowCamera(false);
   };
 
   const handleSubmit = async (e) => {
@@ -116,35 +85,19 @@ const ImageSearch = () => {
     }
   };
 
+  const handleCopyIngredients = () => {
+    const ingredientsText = ingredients.join(', ');
+    navigator.clipboard.writeText(ingredientsText)
+      .then(() => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      })
+      .catch(() => setError('Failed to copy ingredients'));
+  };
+
   return (
     <div className="image-search-container">
       <h1 className="image-search-title">Ingredient Image Recognition</h1>
-
-      <div className="camera-controls">
-        <button
-          type="button"
-          className="camera-button"
-          onClick={showCamera ? stopCamera : startCamera}
-        >
-          <Camera size={20} />
-          {showCamera ? "Stop Camera" : "Start Camera"}
-        </button>
-      </div>
-
-      {showCamera && (
-        <div className="camera-container">
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            className="camera-preview"
-          />
-          <button className="capture-button" onClick={captureImage}>
-            <ImagePlus size={20} />
-            Capture
-          </button>
-        </div>
-      )}
 
       <div
         className="drop-zone"
@@ -191,7 +144,27 @@ const ImageSearch = () => {
 
       {ingredients.length > 0 && (
         <div className="ingredients-list">
-          <h2>Identified Ingredients:</h2>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2>Identified Ingredients:</h2>
+            <button
+              onClick={handleCopyIngredients}
+              className="copy-button"
+              style={{
+                padding: '8px 16px',
+                backgroundColor: copySuccess ? '#4CAF50' : '#2196F3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'background-color 0.3s'
+              }}
+            >
+              {copySuccess ? 'Copied!' : 'Copy Ingredients'}
+            </button>
+          </div>
           <ul>
             {ingredients.map((item, index) => (
               <li key={index}>

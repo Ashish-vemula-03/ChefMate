@@ -51,7 +51,7 @@
 }
 
 /* Sidebar */
-.sidebar-header {
+.profile-sidebar-header {
   padding: 2rem;
   text-align: center;
   border-bottom: 1px solid var(--border-color);
@@ -369,7 +369,7 @@
   margin-top: 0.25rem;
 }
 
-.sidebar-header .logo {
+.profile-sidebar-header .logo {
   object-fit: cover;
   width: 40%;
   height: 30%;

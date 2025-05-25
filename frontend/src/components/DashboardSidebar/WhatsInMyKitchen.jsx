@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./WhatsInMyKitchen.css";
+import ".././../styles/WhatsInMyKitchen.css";
+import { Clock, ChevronDown, X } from "lucide-react";
 
 const RecipeGenerator = () => {
   const [ingredients, setIngredients] = useState("");
-  const [recipe, setRecipe] = useState(null);
+  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [expandedRecipeId, setExpandedRecipeId] = useState(null);
 
   const handleGenerateRecipe = async (e) => {
     e.preventDefault();
@@ -17,116 +19,171 @@ const RecipeGenerator = () => {
 
     setLoading(true);
     setError(null);
-    setRecipe(null); // Changed from setRecipes([]) to setRecipe(null)
+    setRecipes([]);
 
     try {
-      const ingredientsList = ingredients.split(",").map(i => i.trim()).filter(Boolean);
-      const response = await axios.post("http://localhost:5000/api/recipes/generate", {
-        ingredients: ingredientsList
-      });
-      
+      const ingredientsList = ingredients
+        .split(",")
+        .map((i) => i.trim())
+        .filter(Boolean);
+      const response = await axios.post(
+        "http://localhost:5000/api/recipes/generate",
+        {
+          ingredients: ingredientsList,
+          count: 3, // Request 3 recipes
+        }
+      );
+
       if (response.data.error) {
         throw new Error(response.data.error);
       }
-      
-      setRecipe(response.data); // Changed from setRecipes([response.data]) to setRecipe(response.data)
+
+      setRecipes(response.data);
     } catch (err) {
-      console.error('Error details:', err.response?.data || err.message);
-      setError(err.response?.data?.error || "Failed to generate recipe. Please try again.");
+      console.error("Error details:", err.response?.data || err.message);
+      setError(
+        err.response?.data?.error ||
+          "Failed to generate recipe. Please try again."
+      );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePasteIngredients = async () => {
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+      setIngredients(prevIngredients => {
+        // If there are existing ingredients, append with a comma
+        return prevIngredients ? `${prevIngredients}, ${clipboardText}` : clipboardText;
+      });
+    } catch (err) {
+      setError('Failed to paste ingredients');
     }
   };
 
   return (
     <div className="recipe-generator">
       <form onSubmit={handleGenerateRecipe} className="recipe-form">
-        <textarea
-          className="ingredient-input"
-          placeholder="Enter ingredients separated by commas (e.g., tomatoes, onions, chicken)"
-          value={ingredients}
-          onChange={(e) => setIngredients(e.target.value)}
-        />
+        <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+          <textarea
+            className="ingredient-input"
+            placeholder="Enter ingredients separated by commas (e.g., tomatoes, onions, chicken)"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+          />
+          <button
+            type="button"
+            onClick={handlePasteIngredients}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              height: 'fit-content',
+              minWidth: '100px'
+            }}
+          >
+            Paste
+          </button>
+        </div>
         <button type="submit" disabled={loading} className="generate-btn">
           {loading ? "Generating..." : "Generate Recipe"}
         </button>
       </form>
 
-      {loading && <p className="loading-text">Creating your recipe...</p>}
+      {loading && <p className="loading-text">Creating your recipes...</p>}
       {error && <p className="error-text">{error}</p>}
 
-      {recipe && (
-        <div className="recipe-card">
-          {recipe.imageUrl && (
-            <div className="recipe-image">
-              <img src={recipe.imageUrl} alt={recipe.title} />
-            </div>
-          )}
-          <h3 className="recipe-title">{recipe.title}</h3>
-          <div className="recipe-meta">
-            <span className="meta-item">
-              <i className="fas fa-globe"></i> {recipe.cuisine}
-            </span>
-            <span className="meta-item">
-              <i className="fas fa-signal"></i> {recipe.difficulty}
-            </span>
-            <span className="meta-item">
-              <i className="fas fa-clock"></i> Prep: {recipe.prepTime} mins
-            </span>
-            <span className="meta-item">
-              <i className="fas fa-fire"></i> Cook: {recipe.cookTime} mins
-            </span>
-          </div>
-          
-          <div className="recipe-section">
-            <h4 className="section-title">
-              <i className="fas fa-list"></i> Ingredients
-            </h4>
-            <ul className="ingredients-list">
-              {recipe.ingredients.map((item, i) => (
-                <li key={i} className="ingredient-item">{item}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="recipe-section">
-            <h4 className="section-title">
-              <i className="fas fa-tasks"></i> Instructions
-            </h4>
-            <ol className="instructions-list">
-              {recipe.instructions.map((step, i) => (
-                <li key={i} className="instruction-item">{step}</li>
-              ))}
-            </ol>
-          </div>
-
-          {recipe.nutrition && (
-            <div className="nutrition-info">
-              <h4 className="section-title">
-                <i className="fas fa-heartbeat"></i> Nutrition Information
-              </h4>
-              <div className="nutrition-grid">
-                <div className="nutrition-item">
-                  <span className="nutrition-label">Calories:</span>
-                  <span className="nutrition-value">{recipe.nutrition.calories}kcal</span>
+      <div className="recipes-grid">
+        {recipes.map((recipe, index) => (
+          <div
+            key={index}
+            className={`recipe-card ${
+              expandedRecipeId === index ? "expanded" : ""
+            }`}
+            onClick={() =>
+              setExpandedRecipeId(expandedRecipeId === index ? null : index)
+            }
+          >
+            <div className="recipe-card-content">
+              {recipe.imageUrl && (
+                <div className="recipe-image">
+                  <img src={recipe.imageUrl} alt={recipe.title} />
                 </div>
-                <div className="nutrition-item">
-                  <span className="nutrition-label">Protein:</span>
-                  <span className="nutrition-value">{recipe.nutrition.protein}g</span>
-                </div>
-                <div className="nutrition-item">
-                  <span className="nutrition-label">Fat:</span>
-                  <span className="nutrition-value">{recipe.nutrition.fat}g</span>
-                </div>
-                <div className="nutrition-item">
-                  <span className="nutrition-label">Carbs:</span>
-                  <span className="nutrition-value">{recipe.nutrition.carbs}g</span>
-                </div>
+              )}
+              <h3 className="recipe-title">{recipe.title}</h3>
+              <div className="recipe-time">
+                <Clock size={16} />
+                <span>{recipe.prepTime + recipe.cookTime} mins</span>
               </div>
             </div>
-          )}
-        </div>
-      )}
+
+            {expandedRecipeId === index && (
+              <div className="recipe-details">
+                <div className="recipe-meta">
+                  <div className="meta-item">
+                    <strong>Cuisine:</strong> {recipe.cuisine}
+                  </div>
+                  <div className="meta-item">
+                    <strong>Difficulty:</strong> {recipe.difficulty}
+                  </div>
+                  <div className="meta-item">
+                    <strong>Prep:</strong> {recipe.prepTime} mins
+                  </div>
+                  <div className="meta-item">
+                    <strong>Cook:</strong> {recipe.cookTime} mins
+                  </div>
+                </div>
+
+                <div className="recipe-ingredients">
+                  <h4>Ingredients</h4>
+                  <ul>
+                    {recipe.ingredients?.map((ing, i) => (
+                      <li key={i}>{ing}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="recipe-instructions">
+                  <h4>Instructions</h4>
+                  <ol>
+                    {recipe.instructions?.map((step, i) => (
+                      <li key={i}>{step}</li>
+                    ))}
+                  </ol>
+                </div>
+
+                {recipe.nutrition && (
+                  <div className="nutrition-info">
+                    <h4>Nutrition Information</h4>
+                    <div className="nutrition-grid">
+                      <div className="nutrition-item">
+                        <span>Calories</span>
+                        <strong>{recipe.nutrition.calories}kcal</strong>
+                      </div>
+                      <div className="nutrition-item">
+                        <span>Protein</span>
+                        <strong>{recipe.nutrition.protein}g</strong>
+                      </div>
+                      <div className="nutrition-item">
+                        <span>Fat</span>
+                        <strong>{recipe.nutrition.fat}g</strong>
+                      </div>
+                      <div className="nutrition-item">
+                        <span>Carbs</span>
+                        <strong>{recipe.nutrition.carbs}g</strong>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

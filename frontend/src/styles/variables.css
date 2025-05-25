@@ -8,5 +8,9 @@
   --text-secondary: #636e72;
   --shadow-primary: rgba(255, 215, 0, 0.3);
   --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-light)
+  );
 }
