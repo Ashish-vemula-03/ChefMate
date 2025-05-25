@@ -20,14 +20,13 @@ import Preferences from "../components/DashboardSidebar/Preferences";
 import Achievements from "../components/DashboardSidebar/Achievements";
 import Notifications from "../components/DashboardSidebar/Notifications";
 import Community from "../components/DashboardSidebar/Community";
+import { useFavorites } from '../context/FavoritesContext';
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMenu, setSelectedMenu] = useState("Explore");
-  const [favorites, setFavorites] = useState(
-    JSON.parse(localStorage.getItem("favorites")) || []
-  );
+  const { favorites, setFavorites } = useFavorites(); // Use context instead of local state
   const navigate = useNavigate();
 
   useEffect(() => {
