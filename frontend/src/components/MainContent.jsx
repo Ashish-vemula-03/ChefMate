@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "../services/axios";
 import { Clock, ChevronDown } from "lucide-react";
 import { FaHeart, FaRegHeart, FaSearch, FaFilter } from "react-icons/fa";
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from "../services/dashboardService";
 import "../styles/MainContent.css";
+import { useFavorites } from '../context/FavoritesContext';
 
 // Recipe Card
 const RecipeCard = ({ recipe, isFavorite, onToggleFavorite, onClick }) => (
@@ -162,10 +167,9 @@ const LoadingSkeleton = () => (
 
 const MainContent = ({
   searchQuery,
-  favorites = [],
-  setFavorites = () => {},
   showOnlyFavorites = false,
 }) => {
+  const { favorites, setFavorites } = useFavorites(); // Use context instead of props
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -225,19 +229,32 @@ const MainContent = ({
     setLocalSearchQuery(searchQuery || "");
   }, [searchQuery]);
 
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
+  // Remove this useEffect
+  // useEffect(() => {
+  //     localStorage.setItem("favorites", JSON.stringify(favorites));
+  // }, [favorites]);
 
-  const handleToggleFavorite = (recipe) => {
-    setFavorites((prev) => {
-      const exists = prev.some((fav) => fav._id === recipe._id);
+  const handleToggleFavorite = async (recipe) => {
+    try {
+      const exists = favorites.some((fav) => fav._id === recipe._id);
       if (exists) {
-        return prev.filter((fav) => fav._id !== recipe._id);
+        await removeFromFavorites(recipe._id);
+        setFavorites((prev) => prev.filter((fav) => fav._id !== recipe._id));
       } else {
-        return [...prev, recipe];
+        await addToFavorites(recipe._id);
+        setFavorites((prev) => [...prev, recipe]);
       }
-    });
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+      if (error.response?.status === 400) {
+        // Handle specific 400 error
+        console.error("Bad request:", error.response.data.message);
+      } else if (error.response?.status === 401) {
+        // Handle authentication error
+        console.error("Authentication failed");
+      }
+      // Optionally show an error message to the user
+    }
   };
 
   const handleSearchChange = (e) => {
