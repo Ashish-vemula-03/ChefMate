@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import DashboardSidebar from "../components/DashboardSidebar";
 import "../styles/Dashboard.css"; // Import the new CSS
 import MainContent from "../components/MainContent"; // Import MainContent component
-
-// Import all the components for the sidebar
 import Explore from "../components/DashboardSidebar/Explore";
 import MyRecipes from "../components/DashboardSidebar/MyRecipes";
 import AddRecipe from "../components/DashboardSidebar/AddRecipe";
@@ -25,17 +23,26 @@ import Community from "../components/DashboardSidebar/Community";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
-  const [selectedMenu, setSelectedMenu] = useState("Explore"); // Track the selected menu item
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedMenu, setSelectedMenu] = useState("Explore");
   const [favorites, setFavorites] = useState(
     JSON.parse(localStorage.getItem("favorites")) || []
   );
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check authentication
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
-      navigate("/"); // Redirect if no user is logged in
+      navigate("/");
+    }
+
+    // Check and apply theme
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.setAttribute("data-theme", "light");
     }
   }, [navigate]);
 
@@ -96,7 +103,11 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="dashboard-container">
+    <div
+      className={`dashboard-container ${
+        !sidebarOpen ? "sidebar-collapsed" : ""
+      }`}
+    >
       {/* Sidebar and Main Content Layout */}
       <div className="dashboard-layout">
         <DashboardSidebar

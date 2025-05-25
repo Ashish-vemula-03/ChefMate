@@ -1,63 +1,134 @@
 :root {
-  --primary: #ffd700;
+  /* Primary Colors */
+  --primary-color: #ff6600;
+  --primary-hover: #ff8533;
   --primary-light: #ffeb3b;
   --primary-dark: #ffc107;
+
+  /* Background Colors */
+  --bg-color: #f8f9fa;
   --bg-glass: rgba(255, 255, 255, 0.1);
   --bg-overlay: rgba(0, 0, 0, 0.3);
+  --sidebar-bg: #fff;
+  --card-bg: #fff;
+
+  /* Text Colors */
+  --text-color: #333;
   --text-primary: #2d3436;
   --text-secondary: #636e72;
+  --button-text: #fff;
+
+  /* Border & Shadow */
+  --border-color: #eee;
+  --hover-color: #f0f0f0;
   --shadow-primary: rgba(255, 215, 0, 0.3);
   --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  --gradient-primary: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--primary-light)
-  );
+
+  /* Input Colors */
+  --input-bg: #fff;
+  --input-border: #ddd;
+
+  /* Status Colors */
+  --danger-color: #dc3545;
+  --danger-hover: #bb2d3b;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --bg-glass: rgba(0, 0, 0, 0.3);
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --text-color: #fff;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --sidebar-bg: #2d2d2d;
+  --card-bg: #333;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --hover-color: #3a3a3a;
+  --input-bg: #2d2d2d;
+  --input-border: #444;
 }
 
 .dashboard-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #fff5e6, #fff9e6);
-  color: var(--text-primary);
-}
-
-.dark .dashboard-container {
-  background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-  color: white;
+  background: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .dashboard-layout {
   display: flex;
-  gap: 1rem;
+  flex: 1;
+  position: relative;
 }
 
 .dashboard-main-content {
   flex: 1;
-  padding: 24px;
   overflow-y: auto;
   min-height: calc(100vh - 60px);
   margin-left: 280px;
-  transition: margin-left 0.3s ease;
+  transition: all 0.3s ease;
+  background: var(--bg-color);
+  width: calc(100% - 280px);
+  max-width: 1600px;
+  position: relative;
+  z-index: 10;
 }
 
-/* When sidebar is collapsed */
-.sidebar-collapsed + .dashboard-main-content {
-  margin-left: 72px;
+/* Extra large screens */
+@media (min-width: 1600px) {
+  .dashboard-main-content {
+    margin: 0 auto 0 280px;
+    padding: 32px;
+  }
 }
 
-/* Content grid layout */
-.content-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  padding: 20px;
-  max-width: 1800px;
-  margin: 0 auto;
+/* Large screens */
+@media (max-width: 1400px) {
+  .dashboard-main-content {
+    padding: 24px;
+    max-width: 1200px;
+  }
 }
 
-/* Card container */
+/* Medium screens */
+@media (max-width: 1200px) {
+  .dashboard-main-content {
+    padding: 20px;
+    max-width: 1000px;
+  }
+}
+
+/* Small screens */
+@media (max-width: 992px) {
+  .dashboard-main-content {
+    padding: 16px;
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    max-width: 800px;
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .dashboard-main-content {
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 480px) {
+  .dashboard-main-content {
+    padding: 12px;
+  }
+}
 .recipe-card {
   background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -124,11 +195,11 @@
   .modal-content {
     grid-template-columns: 1fr;
   }
-  
+
   .recipe-modal {
     padding: 24px;
   }
-  
+
   .modal-image-container {
     height: 300px;
   }
@@ -144,20 +215,37 @@
   .modal-content {
     grid-template-columns: 1fr;
   }
-  
+
   .dashboard-main-content {
     margin-left: 0;
     padding: 16px;
   }
 }
 
-.dark .dashboard-main-content {
+.dark .recipe-card {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dark .recipe-card:hover {
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+.dark .dashboard-main-content {
+  background: var(--bg-color);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2);
 }
 
 /* Title */
 .dashboard-title {
   font-size: 1.5rem;
   font-weight: 600;
+}
+
+.sidebar-collapsed .dashboard-main-content {
+  margin-left: 80px;
+  width: calc(100% - 80px);
 }

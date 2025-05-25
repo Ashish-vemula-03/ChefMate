@@ -287,13 +287,13 @@ export default function Profile() {
     <div className={`profile-layout ${isDarkMode ? "dark" : "light"}`}>
       {/* Sidebar */}
       <div className="profile-sidebar">
-        <div className="sidebar-header">
-          <img 
-            src={chefmateLogo} 
-            alt="ChefMate" 
-            className="logo" 
-            onClick={() => navigate('/dashboard')}
-            style={{ cursor: 'pointer' }}
+        <div className="profile-sidebar-header">
+          <img
+            src={chefmateLogo}
+            alt="ChefMate"
+            className="logo"
+            onClick={() => navigate("/dashboard")}
+            style={{ cursor: "pointer" }}
           />
           <div className="user-brief">
             <div style={{ position: "relative" }}>

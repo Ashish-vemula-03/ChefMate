@@ -7,7 +7,7 @@ import "../styles/MainContent.css";
 // Recipe Card
 const RecipeCard = ({ recipe, isFavorite, onToggleFavorite, onClick }) => (
   <div className="recipe-card" onClick={() => onClick(recipe)}>
-    <div style={{ position: "relative" }}>
+    <div className="recipe-image-container">
       <img src={recipe.image} alt={recipe.title} className="recipe-image" />
       <button
         className={`favorite-btn ${isFavorite ? "active" : ""}`}
@@ -163,7 +163,7 @@ const LoadingSkeleton = () => (
 const MainContent = ({
   searchQuery,
   favorites = [],
-  setFavorites = () => { },
+  setFavorites = () => {},
   showOnlyFavorites = false,
 }) => {
   const [recipes, setRecipes] = useState([]);
@@ -176,24 +176,33 @@ const MainContent = ({
   // Filter categories
   const filterCategories = [
     { label: "All", value: "" },
-    { label: "Diet Type", options: [
-      { label: "Veg", value: "category:veg" },
-      { label: "Non-veg", value: "category:non-veg" },
-      { label: "Balanced Diet", value: "dietType:balanced" },
-      { label: "Low Diet", value: "dietType:low" },
-      { label: "High Diet", value: "dietType:high" },
-    ]},
-    { label: "Region", options: [
-      { label: "South-Indian", value: "mainCourseRegion:South" },
-      { label: "North-Indian", value: "mainCourseRegion:North" },
-      { label: "East-Indian", value: "mainCourseRegion:East" },
-      { label: "West-Indian", value: "mainCourseRegion:West" },
-    ]},
-    { label: "Meal Type", options: [
-      { label: "Breakfast/Tiffin", value: "mealType:breakfast" },
-      { label: "Lunch", value: "mealType:lunch" },
-      { label: "Dinner", value: "mealType:dinner" },
-    ]},
+    {
+      label: "Diet Type",
+      options: [
+        { label: "Veg", value: "category:veg" },
+        { label: "Non-veg", value: "category:non-veg" },
+        { label: "Balanced Diet", value: "dietType:balanced" },
+        { label: "Low Diet", value: "dietType:low" },
+        { label: "High Diet", value: "dietType:high" },
+      ],
+    },
+    {
+      label: "Region",
+      options: [
+        { label: "South-Indian", value: "mainCourseRegion:South" },
+        { label: "North-Indian", value: "mainCourseRegion:North" },
+        { label: "East-Indian", value: "mainCourseRegion:East" },
+        { label: "West-Indian", value: "mainCourseRegion:West" },
+      ],
+    },
+    {
+      label: "Meal Type",
+      options: [
+        { label: "Breakfast/Tiffin", value: "mealType:breakfast" },
+        { label: "Lunch", value: "mealType:lunch" },
+        { label: "Dinner", value: "mealType:dinner" },
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -247,42 +256,50 @@ const MainContent = ({
   const displayedRecipes = showOnlyFavorites
     ? favorites
     : recipes.filter((recipe) => {
-      // Text search filter
-      const searchLower = localSearchQuery.toLowerCase();
-      const matchesSearch = searchLower === "" || (
-        recipe.title.toLowerCase().includes(searchLower) ||
-        recipe.ingredients.some((ingredient) =>
-          ingredient.toLowerCase().includes(searchLower)
-        ) ||
-        recipe.cuisine?.toLowerCase().includes(searchLower) ||
-        recipe.category?.toLowerCase().includes(searchLower)
-      );
+        // Text search filter
+        const searchLower = localSearchQuery.toLowerCase();
+        const matchesSearch =
+          searchLower === "" ||
+          recipe.title.toLowerCase().includes(searchLower) ||
+          recipe.ingredients.some((ingredient) =>
+            ingredient.toLowerCase().includes(searchLower)
+          ) ||
+          recipe.cuisine?.toLowerCase().includes(searchLower) ||
+          recipe.category?.toLowerCase().includes(searchLower);
 
-      // Category filter
-      let matchesFilter = true;
-      if (selectedFilter) {
-        const [filterType, filterValue] = selectedFilter.split(':');
-        
-        switch(filterType) {
-          case 'category':
-            matchesFilter = recipe.category?.toLowerCase().includes(filterValue.toLowerCase());
-            break;
-          case 'dietType':
-            matchesFilter = recipe.dietType?.toLowerCase().includes(filterValue.toLowerCase());
-            break;
-          case 'mainCourseRegion':
-            matchesFilter = recipe.mainCourseRegion?.toLowerCase().includes(filterValue.toLowerCase());
-            break;
-          case 'mealType':
-            matchesFilter = recipe.mealType?.toLowerCase().includes(filterValue.toLowerCase());
-            break;
-          default:
-            matchesFilter = true;
+        // Category filter
+        let matchesFilter = true;
+        if (selectedFilter) {
+          const [filterType, filterValue] = selectedFilter.split(":");
+
+          switch (filterType) {
+            case "category":
+              matchesFilter = recipe.category
+                ?.toLowerCase()
+                .includes(filterValue.toLowerCase());
+              break;
+            case "dietType":
+              matchesFilter = recipe.dietType
+                ?.toLowerCase()
+                .includes(filterValue.toLowerCase());
+              break;
+            case "mainCourseRegion":
+              matchesFilter = recipe.mainCourseRegion
+                ?.toLowerCase()
+                .includes(filterValue.toLowerCase());
+              break;
+            case "mealType":
+              matchesFilter = recipe.mealType
+                ?.toLowerCase()
+                .includes(filterValue.toLowerCase());
+              break;
+            default:
+              matchesFilter = true;
+          }
         }
-      }
 
-      return matchesSearch && matchesFilter;
-    });
+        return matchesSearch && matchesFilter;
+      });
 
   if (loading) {
     return (
@@ -323,38 +340,51 @@ const MainContent = ({
               className="search-input"
             />
           </div>
-          
+
           <div className="filter-dropdown-container">
-            <button 
-              className="filter-button" 
+            <button
+              className="filter-button"
               onClick={toggleFilterDropdown}
               aria-expanded={showFilterDropdown}
               aria-haspopup="true"
             >
               <FaFilter />
-              <span>{selectedFilter ? filterCategories.flatMap(cat => cat.options || []).find(opt => opt.value === selectedFilter)?.label || "Filter" : "Filter"}</span>
+              <span>
+                {selectedFilter
+                  ? filterCategories
+                      .flatMap((cat) => cat.options || [])
+                      .find((opt) => opt.value === selectedFilter)?.label ||
+                    "Filter"
+                  : "Filter"}
+              </span>
               <ChevronDown size={16} />
             </button>
-            
+
             {showFilterDropdown && (
               <div className="filter-dropdown">
                 {filterCategories.map((category) => (
                   <div key={category.label} className="filter-category">
                     {category.label !== "All" ? (
-                      <div className="filter-category-label">{category.label}</div>
+                      <div className="filter-category-label">
+                        {category.label}
+                      </div>
                     ) : (
-                      <div 
-                        className={`filter-option ${selectedFilter === "" ? "active" : ""}`}
+                      <div
+                        className={`filter-option ${
+                          selectedFilter === "" ? "active" : ""
+                        }`}
                         onClick={() => handleFilterSelect("")}
                       >
                         All Recipes
                       </div>
                     )}
-                    
+
                     {category.options?.map((option) => (
-                      <div 
-                        key={option.value} 
-                        className={`filter-option ${selectedFilter === option.value ? "active" : ""}`}
+                      <div
+                        key={option.value}
+                        className={`filter-option ${
+                          selectedFilter === option.value ? "active" : ""
+                        }`}
                         onClick={() => handleFilterSelect(option.value)}
                       >
                         {option.label}
@@ -367,7 +397,7 @@ const MainContent = ({
           </div>
         </div>
       </div>
-      
+
       <div className="main-content">
         {displayedRecipes.length > 0 ? (
           displayedRecipes.map((recipe) => (
@@ -380,7 +410,9 @@ const MainContent = ({
             />
           ))
         ) : (
-          <div className="no-recipes">No recipes found matching your criteria!</div>
+          <div className="no-recipes">
+            No recipes found matching your criteria!
+          </div>
         )}
       </div>
     </>

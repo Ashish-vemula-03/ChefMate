@@ -1,37 +1,7 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const axios = require("axios");
 
 // Initialize the Gemini AI client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-async function generateFoodImage(title) {
-  try {
-    const response = await axios({
-      method: "post",
-      url: "https://api-inference.huggingface.co/models/prompthero/openjourney",
-      headers: {
-        Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      data: {
-        inputs: `${title}, food icon, minimalistic, isometric design, clean white background, professional illustration, vector style`,
-      },
-      responseType: "arraybuffer",
-    });
-
-    const base64Image = Buffer.from(response.data).toString("base64");
-    return `data:image/png;base64,${base64Image}`;
-  } catch (error) {
-    console.error("Hugging Face Icon generation failed:", error);
-    // Fallback food-related icons
-    const fallbackIcons = [
-      "https://cdn-icons-png.flaticon.com/512/1046/1046751.png",
-      "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",
-      "https://cdn-icons-png.flaticon.com/512/1475/1475933.png"
-    ];
-    return fallbackIcons[Math.floor(Math.random() * fallbackIcons.length)];
-  }
-}
 
 async function generateRecipesFromIngredients(ingredients) {
   if (!Array.isArray(ingredients) || ingredients.length === 0) {
@@ -43,25 +13,30 @@ async function generateRecipesFromIngredients(ingredients) {
       model: "gemini-1.5-flash",
     });
 
-    const prompt = `Generate an Indian recipe using these ingredients: ${ingredients.join(
+    const prompt = `Generate 3 different Indian recipes using some or all of these ingredients: ${ingredients.join(
       ", "
-    )}. 
+    )}. Make the recipes diverse in terms of difficulty and cooking time. 
     Return the response in this exact JSON format:
     {
-      "title": "Recipe Name",
-      "ingredients": ["ingredient1", "ingredient2"],
-      "instructions": ["step1", "step2"],
-      "cuisine": "Indian",
-      "difficulty": "Easy/Medium/Hard",
-      "prepTime": number,
-      "cookTime": number,
-      "servings": number,
-      "nutrition": {
-        "calories": number,
-        "protein": number,
-        "fat": number,
-        "carbs": number
-      }
+      "recipes": [
+        {
+          "title": "Recipe Name",
+          "ingredients": ["ingredient1", "ingredient2"],
+          "instructions": ["step1", "step2"],
+          "cuisine": "Indian",
+          "difficulty": "Easy/Medium/Hard",
+          "prepTime": number,
+          "cookTime": number,
+          "servings": number,
+          "nutrition": {
+            "calories": number,
+            "protein": number,
+            "fat": number,
+            "carbs": number
+          }
+        },
+        // Two more recipe objects with the same structure
+      ]
     }`;
 
     const result = await model.generateContent(prompt);
@@ -70,20 +45,18 @@ async function generateRecipesFromIngredients(ingredients) {
 
     try {
       const cleanedResponse = text.replace(/```json|```/g, "").trim();
-      const recipeData = JSON.parse(cleanedResponse);
-
-      // Generate food image using DeepAI
-      const imageUrl = await generateFoodImage(recipeData.title);
-      recipeData.imageUrl = imageUrl;
-
-      return recipeData;
+      const recipesData = JSON.parse(cleanedResponse);
+      return recipesData.recipes;
     } catch (parseError) {
       console.error("Parse error:", parseError);
-      throw new Error("Failed to parse generated recipe");
+      throw new Error("Failed to parse generated recipes");
     }
   } catch (error) {
     console.error("Gemini API error:", error);
-    throw new Error("Failed to generate recipe using provided ingredients");
+    if (error.status === 403 && error.errorDetails?.[0]?.reason === 'SERVICE_DISABLED') {
+      throw new Error("Gemini API is not enabled. Please enable it in the Google Cloud Console and try again in a few minutes.");
+    }
+    throw new Error("Failed to generate recipes using provided ingredients");
   }
 }
 

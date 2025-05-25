@@ -25,6 +25,9 @@ import {
   ChevronRight,
 } from "lucide-react";
 import clsx from "clsx";
+import { useState, useEffect } from "react";
+// Remove these imports as they're no longer needed
+// import { Sun, Moon } from "lucide-react";
 
 const DashboardSidebar = ({
   isOpen: parentSidebarState,
@@ -33,7 +36,7 @@ const DashboardSidebar = ({
   setSelectedMenu,
 }) => {
   const navigate = useNavigate();
-  
+
   const navItems = [
     { label: "Explore", icon: Utensils },
     { label: "My Recipes", icon: BookOpenCheck },
@@ -59,31 +62,36 @@ const DashboardSidebar = ({
       className={clsx(
         "dashboard-sidebar",
         parentSidebarState ? "sidebar-expanded" : "sidebar-collapsed",
-        "dark"
+        "transition-all duration-300 ease-in-out"
       )}
     >
       {/* Logo and Brand Name */}
       <div className="sidebar-header">
-        <div 
-          className="sidebar-brand" 
-          onClick={() => navigate("/")}
-          style={{ cursor: "pointer" }}
-        >
-          <img src={chefMateLogo} alt="ChefMate Logo" className="sidebar-logo" />
+        <div className="sidebar-brand" onClick={() => navigate("/")}>
+          <div className="logo-container">
+            <img
+              src={chefMateLogo}
+              alt="ChefMate Logo"
+              className="sidebar-logo"
+              width={50}
+              height={50}
+            />
+          </div>
           {parentSidebarState && (
-            <p className="fw-bold fs-4 sidebar-brand-text mb-0">
-              Chef<span className="accent-text">Mate</span>
-            </p>
+            <h2 className="brand-text">
+              CHEF<span className="accent-text">MATE</span>
+            </h2>
           )}
         </div>
       </div>
-      
+
       <div className="px-2 space-y-2 pb-6">
         {navItems.map(({ label, icon: Icon }) => (
           <div
             key={label}
             className={clsx(
-              "sidebar-item dark group relative",
+              "sidebar-item",
+              "group relative",
               selectedMenu === label && "active"
             )}
             onClick={() => setSelectedMenu(label)}
@@ -100,17 +108,19 @@ const DashboardSidebar = ({
         ))}
       </div>
 
-      {/* Toggle button */}
-      <div className="p-2 border-t border-gray-150 dark:border-gray-700">
+      <div className="collapse-button-container">
         <button
           onClick={() => setSidebarOpen((prev) => !prev)}
           className={clsx(
-            "flex items-center justify-center rounded transition hover:bg-gray-200 dark:hover:bg-gray-800",
-            parentSidebarState ? "w-full p-2" : "w-10 h-10 mx-auto"
+            "collapse-button",
+            parentSidebarState ? "expanded" : "collapsed"
           )}
+          aria-label={
+            parentSidebarState ? "Collapse sidebar" : "Expand sidebar"
+          }
         >
           {parentSidebarState ? (
-            <ChevronLeft size={16} />
+            <ChevronLeft size={20} />
           ) : (
             <ChevronRight size={20} />
           )}
