@@ -1,4 +1,6 @@
 // src/data/foodItems.js
+import { indianFoodItems } from './indianFoodItems';
+
 export const foodItems = [
   // Breakfast Items
   {
@@ -9,8 +11,10 @@ export const foodItems = [
     protein: 15,
     carbs: 70,
     fats: 8,
-    image: '/images/food/oatmeal.jpg',
+    image:
+      'https://images.unsplash.com/photo-1505253304499-671c55fb57fe?w=800&auto=format&fit=crop&q=60',
     description: 'Healthy oatmeal topped with fresh banana slices',
+    cuisine: 'Western',
   },
   {
     id: 2,
@@ -20,8 +24,10 @@ export const foodItems = [
     protein: 20,
     carbs: 25,
     fats: 5,
-    image: '/images/food/greek-yogurt.jpg',
+    image:
+      'https://images.unsplash.com/photo-1557749322-3bb7f9426d91?w=800&auto=format&fit=crop&q=60',
     description: 'Creamy Greek yogurt with mixed berries',
+    cuisine: 'Western',
   },
   {
     id: 3,
@@ -31,8 +37,10 @@ export const foodItems = [
     protein: 30,
     carbs: 10,
     fats: 2,
-    image: '/images/food/protein-shake.jpg',
+    image:
+      'https://images.unsplash.com/photo-1553530979-fbb9e4aee36f?w=800&auto=format&fit=crop&q=60',
     description: 'Nutritious protein shake with fruits',
+    cuisine: 'Western',
   },
 
   // Lunch Items
@@ -44,8 +52,10 @@ export const foodItems = [
     protein: 40,
     carbs: 80,
     fats: 15,
-    image: '/images/food/chicken-rice.jpg',
+    image:
+      'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&auto=format&fit=crop&q=60',
     description: 'Grilled chicken with brown rice and vegetables',
+    cuisine: 'Western',
   },
   {
     id: 5,
@@ -55,8 +65,10 @@ export const foodItems = [
     protein: 35,
     carbs: 20,
     fats: 15,
-    image: '/images/food/chicken-salad.jpg',
+    image:
+      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop&q=60',
     description: 'Fresh salad with grilled chicken breast',
+    cuisine: 'Western',
   },
   {
     id: 6,
@@ -66,8 +78,10 @@ export const foodItems = [
     protein: 15,
     carbs: 70,
     fats: 12,
-    image: '/images/food/quinoa-bowl.jpg',
+    image:
+      'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800&auto=format&fit=crop&q=60',
     description: 'Protein-rich quinoa with vegetables',
+    cuisine: 'Western',
   },
 
   // Dinner Items
@@ -79,8 +93,10 @@ export const foodItems = [
     protein: 45,
     carbs: 60,
     fats: 25,
-    image: '/images/food/salmon.jpg',
+    image:
+      'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&auto=format&fit=crop&q=60',
     description: 'Baked salmon with roasted sweet potato',
+    cuisine: 'Western',
   },
   {
     id: 8,
@@ -90,8 +106,10 @@ export const foodItems = [
     protein: 40,
     carbs: 30,
     fats: 15,
-    image: '/images/food/baked-fish.jpg',
+    image:
+      'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&auto=format&fit=crop&q=60',
     description: 'Healthy baked fish with seasonal vegetables',
+    cuisine: 'Western',
   },
   {
     id: 9,
@@ -101,8 +119,10 @@ export const foodItems = [
     protein: 15,
     carbs: 50,
     fats: 18,
-    image: '/images/food/stir-fry.jpg',
+    image:
+      'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&auto=format&fit=crop&q=60',
     description: 'Colorful vegetable stir fry with tofu',
+    cuisine: 'Western',
   },
 
   // Snacks
@@ -114,8 +134,10 @@ export const foodItems = [
     protein: 10,
     carbs: 15,
     fats: 25,
-    image: '/images/food/mixed-nuts.jpg',
+    image:
+      'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=800&auto=format&fit=crop&q=60',
     description: 'Healthy mix of nuts and seeds',
+    cuisine: 'Western',
   },
   {
     id: 11,
@@ -125,8 +147,10 @@ export const foodItems = [
     protein: 20,
     carbs: 25,
     fats: 8,
-    image: '/images/food/protein-bar.jpg',
+    image:
+      'https://images.unsplash.com/photo-1622484212850-eb596d769edc?w=800&auto=format&fit=crop&q=60',
     description: 'High-protein energy bar',
+    cuisine: 'Western',
   },
   {
     id: 12,
@@ -136,9 +160,14 @@ export const foodItems = [
     protein: 5,
     carbs: 40,
     fats: 2,
-    image: '/images/food/smoothie.jpg',
+    image:
+      'https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=800&auto=format&fit=crop&q=60',
     description: 'Refreshing fruit smoothie',
+    cuisine: 'Western',
   },
+
+  // Add all Indian food items
+  ...indianFoodItems,
 ];
 
 export const getFoodItemsByCategory = (category) => {
@@ -158,4 +187,12 @@ export const getFoodItemsByMacros = (minProtein, minCarbs, minFats) => {
       item.carbs >= minCarbs &&
       item.fats >= minFats
   );
+};
+
+export const getFoodItemsByCuisine = (cuisine) => {
+  return foodItems.filter((item) => item.cuisine === cuisine);
+};
+
+export const getAvailableCuisines = () => {
+  return [...new Set(foodItems.map((item) => item.cuisine))];
 };

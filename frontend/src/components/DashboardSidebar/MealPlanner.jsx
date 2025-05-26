@@ -1,5 +1,5 @@
 // src/components/DashboardSidebar/MealPlanner.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FaCalendarAlt,
   FaPlus,
@@ -8,13 +8,23 @@ import {
   FaTrash,
 } from 'react-icons/fa';
 import CustomMealPlan from './CustomMealPlan';
+import Settings from './Settings';
 import { getFoodItemsByCategory } from '../../data/foodItems';
 import './MealPlanner.css';
 
 const MealPlanner = () => {
   const [activeTab, setActiveTab] = useState('templates');
-  const [savedPlans, setSavedPlans] = useState([]);
+  const [savedPlans, setSavedPlans] = useState(() => {
+    // Try to load saved plans from localStorage
+    const savedPlansFromStorage = localStorage.getItem('savedMealPlans');
+    return savedPlansFromStorage ? JSON.parse(savedPlansFromStorage) : [];
+  });
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+  // Save plans to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('savedMealPlans', JSON.stringify(savedPlans));
+  }, [savedPlans]);
 
   const dietTemplates = [
     {
@@ -140,16 +150,32 @@ const MealPlanner = () => {
   ];
 
   const handleUsePlan = (template) => {
+    // Create a properly structured meal plan from template
     const newPlan = {
       id: Date.now(),
       name: template.name,
       description: template.description,
-      calories: template.calories,
-      macros: template.macros,
-      meals: template.meals,
-      isTemplate: true,
+      days: days.map((day) => ({
+        day,
+        meals: Object.entries(template.meals).map(([mealType, items]) => ({
+          meal: mealType,
+          items: items.map((item) => ({ ...item, quantity: 100 })),
+        })),
+        macros: {
+          calories: template.calories,
+          protein: template.macros.protein,
+          carbs: template.macros.carbs,
+          fats: template.macros.fats,
+        },
+      })),
     };
     setSavedPlans([...savedPlans, newPlan]);
+    setActiveTab('my-plans');
+  };
+
+  const handleSavePlan = (plan) => {
+    setSavedPlans([...savedPlans, { ...plan, id: Date.now() }]);
+    setSelectedTemplate(null);
     setActiveTab('my-plans');
   };
 
@@ -157,7 +183,7 @@ const MealPlanner = () => {
     setSavedPlans(savedPlans.filter((plan) => plan.id !== planId));
   };
 
-    return (
+  return (
     <div className="meal-planner-container">
       {/* Navigation Bar */}
       <nav className="meal-planner-nav">
@@ -276,45 +302,59 @@ const MealPlanner = () => {
                       </button>
                     </div>
                     <p className="plan-description">{plan.description}</p>
-                    <div className="plan-macros">
-                      <div className="macro-item">
-                        <span>Calories:</span>
-                        <span>{plan.calories}</span>
-                      </div>
-                      <div className="macro-item">
-                        <span>Protein:</span>
-                        <span>{plan.macros.protein}</span>
-                      </div>
-                      <div className="macro-item">
-                        <span>Carbs:</span>
-                        <span>{plan.macros.carbs}</span>
-                      </div>
-                      <div className="macro-item">
-                        <span>Fats:</span>
-                        <span>{plan.macros.fats}</span>
-                      </div>
-                    </div>
-                    <div className="plan-meals">
-                      {Object.entries(plan.meals).map(([mealType, foods]) => (
-                        <div key={mealType} className="meal-group">
-                          <h4>{mealType}</h4>
-                          <ul>
-                            {foods.map((food, index) => (
-                              <li key={index} className="meal-item">
-                                <div className="meal-item-image">
-                                  <img src={food.image} alt={food.name} />
-                                </div>
-                                <div className="meal-item-info">
-                                  <span className="meal-item-name">
-                                    {food.name}
-                                  </span>
-                                  <span className="meal-item-calories">
-                                    {food.calories} cal
-                                  </span>
-                                </div>
-                              </li>
+                    <div className="plan-days">
+                      {plan.days.map((day) => (
+                        <div key={day.day} className="day-section">
+                          <h4>{day.day}</h4>
+                          <div className="day-macros">
+                            <div className="macro-item">
+                              <span>Calories:</span>
+                              <span>{Math.round(day.macros.calories)} cal</span>
+                            </div>
+                            <div className="macro-item">
+                              <span>Protein:</span>
+                              <span>{day.macros.protein}</span>
+                            </div>
+                            <div className="macro-item">
+                              <span>Carbs:</span>
+                              <span>{day.macros.carbs}</span>
+                            </div>
+                            <div className="macro-item">
+                              <span>Fats:</span>
+                              <span>{day.macros.fats}</span>
+                            </div>
+                          </div>
+                          <div className="day-meals">
+                            {day.meals.map((meal) => (
+                              <div key={meal.meal} className="meal-group">
+                                <h5>{meal.meal}</h5>
+                                <ul className="meal-items-list">
+                                  {meal.items.map((item, idx) => (
+                                    <li key={idx} className="meal-item">
+                                      <div className="meal-item-image">
+                                        <img src={item.image} alt={item.name} />
+                                      </div>
+                                      <div className="meal-item-info">
+                                        <span className="meal-item-name">
+                                          {item.name}
+                                        </span>
+                                        <span className="meal-item-quantity">
+                                          {item.quantity}g
+                                        </span>
+                                        <span className="meal-item-calories">
+                                          {Math.round(
+                                            (item.calories * item.quantity) /
+                                              100
+                                          )}{' '}
+                                          cal
+                                        </span>
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
                             ))}
-                          </ul>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -335,79 +375,15 @@ const MealPlanner = () => {
             <h2>Create Custom Meal Plan</h2>
             <CustomMealPlan
               selectedTemplate={selectedTemplate}
-              onSavePlan={(plan) => {
-                setSavedPlans([...savedPlans, { ...plan, id: Date.now() }]);
-                setSelectedTemplate(null);
-              }}
+              onSavePlan={handleSavePlan}
             />
           </div>
         )}
 
-        {activeTab === 'settings' && (
-          <div className="settings-section">
-            <h2>Meal Planner Settings</h2>
-            <div className="settings-content">
-              <div className="setting-group">
-                <h3>Dietary Preferences</h3>
-                <div className="setting-item">
-                  <label>
-                    <input type="checkbox" /> Vegetarian
-                  </label>
-                </div>
-                <div className="setting-item">
-                  <label>
-                    <input type="checkbox" /> Vegan
-                  </label>
-                </div>
-                <div className="setting-item">
-                  <label>
-                    <input type="checkbox" /> Gluten-Free
-                  </label>
-                </div>
-              </div>
-
-              <div className="setting-group">
-                <h3>Daily Goals</h3>
-                <div className="setting-item">
-                  <label>Calories</label>
-                  <input type="number" placeholder="e.g., 2000" />
-                </div>
-                <div className="setting-item">
-                  <label>Protein (g)</label>
-                  <input type="number" placeholder="e.g., 150" />
-                </div>
-                <div className="setting-item">
-                  <label>Carbs (g)</label>
-                  <input type="number" placeholder="e.g., 250" />
-                </div>
-                <div className="setting-item">
-                  <label>Fats (g)</label>
-                  <input type="number" placeholder="e.g., 70" />
-                </div>
-              </div>
-
-              <div className="setting-group">
-                <h3>Notifications</h3>
-                <div className="setting-item">
-                  <label>
-                    <input type="checkbox" /> Meal Reminders
-                  </label>
-                </div>
-                <div className="setting-item">
-                  <label>
-                    <input type="checkbox" /> Weekly Progress Reports
-                  </label>
-                </div>
-              </div>
-
-              <button className="save-settings-btn">Save Settings</button>
-            </div>
-          </div>
-        )}
+        {activeTab === 'settings' && <Settings />}
       </div>
-      </div>
-    );
-  };
-  
-  export default MealPlanner;
-  
+    </div>
+  );
+};
+
+export default MealPlanner;
