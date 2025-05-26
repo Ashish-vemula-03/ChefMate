@@ -6,6 +6,50 @@
   padding: 1.5rem;
 }
 
+/* Plan Header */
+.plan-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+.plan-name-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  background-color: var(--white);
+  transition: var(--transition);
+}
+
+.plan-name-input:focus {
+  border-color: var(--primary-orange);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.1);
+}
+
+.save-plan-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-orange);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.save-plan-btn:hover {
+  background-color: var(--primary-orange-dark);
+  transform: translateY(-2px);
+}
+
 /* Plan Controls */
 .plan-controls {
   margin-bottom: 2rem;
@@ -312,4 +356,14 @@
 
 [data-theme='dark'] .macro-item {
   background-color: rgba(255, 102, 0, 0.1);
+}
+
+[data-theme='dark'] .plan-name-input {
+  background-color: var(--light-gray);
+  color: var(--text-dark);
+  border-color: var(--border-color);
+}
+
+[data-theme='dark'] .plan-name-input:focus {
+  border-color: var(--primary-orange);
 }

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { FaPlus, FaTrash, FaSearch } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaPlus, FaTrash, FaSearch, FaSave } from 'react-icons/fa';
 import './CustomMealPlan.css';
 
-const CustomMealPlan = () => {
+const CustomMealPlan = ({ selectedTemplate, onSavePlan }) => {
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [selectedMeal, setSelectedMeal] = useState('Breakfast');
   const [foodItems, setFoodItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFoodSearch, setShowFoodSearch] = useState(false);
+  const [planName, setPlanName] = useState('');
 
   const days = [
     'Monday',
@@ -19,6 +20,13 @@ const CustomMealPlan = () => {
     'Sunday',
   ];
   const meals = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
+
+  useEffect(() => {
+    if (selectedTemplate) {
+      setPlanName(`${selectedTemplate.name} - Custom Plan`);
+      // You can pre-populate food items based on the template here
+    }
+  }, [selectedTemplate]);
 
   const handleAddFood = (food) => {
     setFoodItems([...foodItems, { ...food, quantity: 100 }]);
@@ -49,8 +57,43 @@ const CustomMealPlan = () => {
     );
   };
 
+  const handleSavePlan = () => {
+    const totalMacros = calculateTotalMacros();
+    const plan = {
+      name: planName,
+      calories: `${totalMacros.calories.toFixed(0)} cal`,
+      macros: {
+        protein: `${totalMacros.protein.toFixed(1)}g`,
+        carbs: `${totalMacros.carbs.toFixed(1)}g`,
+        fats: `${totalMacros.fats.toFixed(1)}g`,
+      },
+      foodItems,
+      days: days.map((day) => ({
+        day,
+        meals: meals.map((meal) => ({
+          meal,
+          items: foodItems,
+        })),
+      })),
+    };
+    onSavePlan(plan);
+  };
+
   return (
     <div className="custom-meal-plan">
+      <div className="plan-header">
+        <input
+          type="text"
+          className="plan-name-input"
+          placeholder="Enter plan name..."
+          value={planName}
+          onChange={(e) => setPlanName(e.target.value)}
+        />
+        <button className="save-plan-btn" onClick={handleSavePlan}>
+          <FaSave /> Save Plan
+        </button>
+      </div>
+
       <div className="plan-controls">
         <div className="day-selector">
           {days.map((day) => (
