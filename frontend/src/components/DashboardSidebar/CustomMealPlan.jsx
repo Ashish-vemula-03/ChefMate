@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { FaPlus, FaTrash, FaSearch, FaSave } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaSearch, FaSave, FaFilter } from 'react-icons/fa';
+import { foodItems, getAvailableCuisines } from '../../data/foodItems';
 import './CustomMealPlan.css';
 
 const CustomMealPlan = ({ selectedTemplate, onSavePlan }) => {
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [selectedMeal, setSelectedMeal] = useState('Breakfast');
-  const [foodItems, setFoodItems] = useState([]);
+  const [mealPlan, setMealPlan] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [showFoodSearch, setShowFoodSearch] = useState(false);
   const [planName, setPlanName] = useState('');
+  const [selectedCuisine, setSelectedCuisine] = useState('All');
+  const [availableCuisines] = useState(['All', ...getAvailableCuisines()]);
 
   const days = [
     'Monday',
@@ -22,31 +25,66 @@ const CustomMealPlan = ({ selectedTemplate, onSavePlan }) => {
   const meals = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
 
   useEffect(() => {
+    // Initialize meal plan structure regardless of template
+    const initialMealPlan = {};
+    days.forEach((day) => {
+      initialMealPlan[day] = {};
+      meals.forEach((meal) => {
+        initialMealPlan[day][meal] = [];
+      });
+    });
+    setMealPlan(initialMealPlan);
+
+    // If there's a template, set the plan name
     if (selectedTemplate) {
       setPlanName(`${selectedTemplate.name} - Custom Plan`);
-      // You can pre-populate food items based on the template here
     }
   }, [selectedTemplate]);
 
   const handleAddFood = (food) => {
-    setFoodItems([...foodItems, { ...food, quantity: 100 }]);
+    setMealPlan((prevPlan) => {
+      const updatedPlan = { ...prevPlan };
+      if (!updatedPlan[selectedDay]) {
+        updatedPlan[selectedDay] = {};
+      }
+      if (!updatedPlan[selectedDay][selectedMeal]) {
+        updatedPlan[selectedDay][selectedMeal] = [];
+      }
+      // Check if the food item already exists in the current meal
+      const isDuplicate = updatedPlan[selectedDay][selectedMeal].some(
+        (item) => item.id === food.id
+      );
+
+      // Only add if it's not a duplicate
+      if (!isDuplicate) {
+        updatedPlan[selectedDay][selectedMeal].push({ ...food, quantity: 100 });
+      }
+      return updatedPlan;
+    });
     setShowFoodSearch(false);
     setSearchQuery('');
   };
 
-  const handleQuantityChange = (index, value) => {
-    const updatedItems = [...foodItems];
-    updatedItems[index].quantity = value;
-    setFoodItems(updatedItems);
+  const handleQuantityChange = (dayKey, mealKey, foodIndex, value) => {
+    setMealPlan((prevPlan) => {
+      const updatedPlan = { ...prevPlan };
+      updatedPlan[dayKey][mealKey][foodIndex].quantity = value;
+      return updatedPlan;
+    });
   };
 
-  const handleRemoveFood = (index) => {
-    const updatedItems = foodItems.filter((_, i) => i !== index);
-    setFoodItems(updatedItems);
+  const handleRemoveFood = (dayKey, mealKey, foodIndex) => {
+    setMealPlan((prevPlan) => {
+      const updatedPlan = { ...prevPlan };
+      updatedPlan[dayKey][mealKey] = updatedPlan[dayKey][mealKey].filter(
+        (_, i) => i !== foodIndex
+      );
+      return updatedPlan;
+    });
   };
 
-  const calculateTotalMacros = () => {
-    return foodItems.reduce(
+  const calculateMealMacros = (items) => {
+    return items.reduce(
       (acc, item) => ({
         calories: acc.calories + (item.calories * item.quantity) / 100,
         protein: acc.protein + (item.protein * item.quantity) / 100,
@@ -57,27 +95,78 @@ const CustomMealPlan = ({ selectedTemplate, onSavePlan }) => {
     );
   };
 
+  const calculateDayMacros = (dayMeals) => {
+    const macros = { calories: 0, protein: 0, carbs: 0, fats: 0 };
+    Object.values(dayMeals).forEach((mealItems) => {
+      const mealMacros = calculateMealMacros(mealItems);
+      macros.calories += mealMacros.calories;
+      macros.protein += mealMacros.protein;
+      macros.carbs += mealMacros.carbs;
+      macros.fats += mealMacros.fats;
+    });
+    return macros;
+  };
+
   const handleSavePlan = () => {
-    const totalMacros = calculateTotalMacros();
+    // Validate if plan has a name
+    if (!planName.trim()) {
+      alert('Please enter a plan name');
+      return;
+    }
+
+    // Validate if plan has at least one meal
+    let hasMeals = false;
+    for (const day in mealPlan) {
+      for (const meal in mealPlan[day]) {
+        if (mealPlan[day][meal].length > 0) {
+          hasMeals = true;
+          break;
+        }
+      }
+      if (hasMeals) break;
+    }
+
+    if (!hasMeals) {
+      alert('Please add at least one meal to your plan');
+      return;
+    }
+
+    // Create a properly structured plan
     const plan = {
+      id: Date.now(),
       name: planName,
-      calories: `${totalMacros.calories.toFixed(0)} cal`,
-      macros: {
-        protein: `${totalMacros.protein.toFixed(1)}g`,
-        carbs: `${totalMacros.carbs.toFixed(1)}g`,
-        fats: `${totalMacros.fats.toFixed(1)}g`,
-      },
-      foodItems,
+      description: selectedTemplate
+        ? `Custom plan based on ${selectedTemplate.name}`
+        : 'Custom meal plan',
       days: days.map((day) => ({
         day,
         meals: meals.map((meal) => ({
           meal,
-          items: foodItems,
+          items: mealPlan[day]?.[meal] || [],
         })),
+        macros: calculateDayMacros(mealPlan[day] || {}),
       })),
     };
+
+    // Call the parent's onSavePlan function
     onSavePlan(plan);
+
+    // Reset the form
+    setMealPlan({});
+    setPlanName('');
+    setSelectedDay('Monday');
+    setSelectedMeal('Breakfast');
+    setShowFoodSearch(false);
   };
+
+  const filteredFoodItems = foodItems.filter((item) => {
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesCuisine =
+      selectedCuisine === 'All' || item.cuisine === selectedCuisine;
+    return matchesSearch && matchesCuisine;
+  });
 
   return (
     <div className="custom-meal-plan">
@@ -135,46 +224,77 @@ const CustomMealPlan = ({ selectedTemplate, onSavePlan }) => {
 
         {showFoodSearch && (
           <div className="food-search">
-            <div className="search-bar">
-              <FaSearch />
-              <input
-                type="text"
-                placeholder="Search for food..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+            <div className="search-controls">
+              <div className="search-bar">
+                <FaSearch />
+                <input
+                  type="text"
+                  placeholder="Search for food..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <div className="cuisine-filter">
+                <FaFilter />
+                <select
+                  value={selectedCuisine}
+                  onChange={(e) => setSelectedCuisine(e.target.value)}
+                >
+                  {availableCuisines.map((cuisine) => (
+                    <option key={cuisine} value={cuisine}>
+                      {cuisine}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="search-results">
-              {/* Food search results will be populated here */}
-              <div
-                className="food-item"
-                onClick={() =>
-                  handleAddFood({
-                    name: 'Sample Food',
-                    calories: 100,
-                    protein: 10,
-                    carbs: 20,
-                    fats: 5,
-                  })
-                }
-              >
-                <span>Sample Food</span>
-                <span>100 cal</span>
-              </div>
+              {filteredFoodItems.map((food) => (
+                <div
+                  key={food.id}
+                  className="food-search-item"
+                  onClick={() => handleAddFood(food)}
+                >
+                  <div className="food-search-image">
+                    <img src={food.image} alt={food.name} />
+                  </div>
+                  <div className="food-search-info">
+                    <h4>{food.name}</h4>
+                    <p>{food.description}</p>
+                    <div className="food-search-macros">
+                      <span>{food.calories} cal</span>
+                      <span>P: {food.protein}g</span>
+                      <span>C: {food.carbs}g</span>
+                      <span>F: {food.fats}g</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         <div className="food-items">
-          {foodItems.map((item, index) => (
+          {mealPlan[selectedDay]?.[selectedMeal]?.map((item, index) => (
             <div key={index} className="food-item-card">
+              <div className="food-item-image">
+                <img src={item.image} alt={item.name} />
+              </div>
               <div className="food-info">
                 <h4>{item.name}</h4>
                 <div className="food-macros">
-                  <span>{item.calories} cal</span>
-                  <span>P: {item.protein}g</span>
-                  <span>C: {item.carbs}g</span>
-                  <span>F: {item.fats}g</span>
+                  <span>
+                    {Math.round((item.calories * item.quantity) / 100)} cal
+                  </span>
+                  <span>
+                    P: {((item.protein * item.quantity) / 100).toFixed(1)}g
+                  </span>
+                  <span>
+                    C: {((item.carbs * item.quantity) / 100).toFixed(1)}g
+                  </span>
+                  <span>
+                    F: {((item.fats * item.quantity) / 100).toFixed(1)}g
+                  </span>
                 </div>
               </div>
               <div className="food-controls">
@@ -184,14 +304,21 @@ const CustomMealPlan = ({ selectedTemplate, onSavePlan }) => {
                   max="500"
                   value={item.quantity}
                   onChange={(e) =>
-                    handleQuantityChange(index, parseInt(e.target.value))
+                    handleQuantityChange(
+                      selectedDay,
+                      selectedMeal,
+                      index,
+                      parseInt(e.target.value)
+                    )
                   }
                   className="quantity-slider"
                 />
                 <span className="quantity-value">{item.quantity}g</span>
                 <button
                   className="remove-btn"
-                  onClick={() => handleRemoveFood(index)}
+                  onClick={() =>
+                    handleRemoveFood(selectedDay, selectedMeal, index)
+                  }
                 >
                   <FaTrash />
                 </button>
@@ -203,22 +330,46 @@ const CustomMealPlan = ({ selectedTemplate, onSavePlan }) => {
         <div className="meal-summary">
           <h4>Meal Summary</h4>
           <div className="summary-macros">
-            <div className="macro-item">
-              <span>Calories:</span>
-              <span>{calculateTotalMacros().calories.toFixed(0)} cal</span>
-            </div>
-            <div className="macro-item">
-              <span>Protein:</span>
-              <span>{calculateTotalMacros().protein.toFixed(1)}g</span>
-            </div>
-            <div className="macro-item">
-              <span>Carbs:</span>
-              <span>{calculateTotalMacros().carbs.toFixed(1)}g</span>
-            </div>
-            <div className="macro-item">
-              <span>Fats:</span>
-              <span>{calculateTotalMacros().fats.toFixed(1)}g</span>
-            </div>
+            {mealPlan[selectedDay] && (
+              <>
+                <div className="macro-item">
+                  <span>Calories:</span>
+                  <span>
+                    {calculateMealMacros(
+                      mealPlan[selectedDay][selectedMeal] || []
+                    ).calories.toFixed(0)}{' '}
+                    cal
+                  </span>
+                </div>
+                <div className="macro-item">
+                  <span>Protein:</span>
+                  <span>
+                    {calculateMealMacros(
+                      mealPlan[selectedDay][selectedMeal] || []
+                    ).protein.toFixed(1)}
+                    g
+                  </span>
+                </div>
+                <div className="macro-item">
+                  <span>Carbs:</span>
+                  <span>
+                    {calculateMealMacros(
+                      mealPlan[selectedDay][selectedMeal] || []
+                    ).carbs.toFixed(1)}
+                    g
+                  </span>
+                </div>
+                <div className="macro-item">
+                  <span>Fats:</span>
+                  <span>
+                    {calculateMealMacros(
+                      mealPlan[selectedDay][selectedMeal] || []
+                    ).fats.toFixed(1)}
+                    g
+                  </span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
