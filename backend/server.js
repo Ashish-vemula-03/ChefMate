@@ -8,6 +8,7 @@ const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const kitchenRecipeRoutes = require("./routes/kitchenRecipeRoutes");
 
 dotenv.config();
 
@@ -64,6 +65,7 @@ app.use("/api/nutrition", nutritionRoutes);
 app.use("/api/shopping-list", shoppingListRoutes);
 app.use("/api/meal-plan", mealPlanRoutes);
 app.use("/api/recognize", recognizeRoute);
+app.use("/api/kitchen-recipes", kitchenRecipeRoutes);
 
 // Upload profile image
 app.post("/upload", upload.single("profileImage"), async (req, res) => {
