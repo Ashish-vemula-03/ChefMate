@@ -26,3 +26,23 @@ export const getRecommendations = async () => {
 export const getMealPlans = async () => {
   return axios.get("/meal-plans");
 };
+
+export const getShoppingList = async () => {
+  return axios.get("/shopping-list");
+};
+
+export const addToShoppingList = async (recipeData) => {
+  return axios.post("/shopping-list/add", recipeData);
+};
+
+export const removeFromShoppingList = async (itemId) => {
+  return axios.delete(`/shopping-list/${itemId}`);
+};
+
+export const removeRecipeFromShoppingList = async (recipeId) => {
+  return axios.delete(`/shopping-list/recipe/${recipeId}`);
+};
+
+export const updateShoppingListItem = async (itemId, updates) => {
+  return axios.put(`/shopping-list/${itemId}`, updates);
+};
