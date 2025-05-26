@@ -51,7 +51,7 @@ export const indianFoodItems = [
     carbs: 15,
     fats: 28,
     image:
-      'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=800&auto=format&fit=crop&q=60',
     description: 'Creamy tomato-based chicken curry',
     cuisine: 'Indian',
   },
@@ -159,7 +159,7 @@ export const indianFoodItems = [
     carbs: 45,
     fats: 10,
     image:
-      'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1630410364547-5bb40cf5c748?w=800&auto=format&fit=crop&q=60',
     description: 'Spiced potato fritter in a bun',
     cuisine: 'Indian',
   },

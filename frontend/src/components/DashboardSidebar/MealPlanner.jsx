@@ -1,14 +1,7 @@
 // src/components/DashboardSidebar/MealPlanner.jsx
 import React, { useState, useEffect } from 'react';
-import {
-  FaCalendarAlt,
-  FaPlus,
-  FaUtensils,
-  FaCog,
-  FaTrash,
-} from 'react-icons/fa';
+import { FaCalendarAlt, FaPlus, FaUtensils, FaTrash } from 'react-icons/fa';
 import CustomMealPlan from './CustomMealPlan';
-import Settings from './Settings';
 import { getFoodItemsByCategory } from '../../data/foodItems';
 import './MealPlanner.css';
 
@@ -149,27 +142,47 @@ const MealPlanner = () => {
     },
   ];
 
+  const days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
   const handleUsePlan = (template) => {
     // Create a properly structured meal plan from template
     const newPlan = {
       id: Date.now(),
       name: template.name,
       description: template.description,
+      image: template.image,
       days: days.map((day) => ({
         day,
         meals: Object.entries(template.meals).map(([mealType, items]) => ({
           meal: mealType,
-          items: items.map((item) => ({ ...item, quantity: 100 })),
+          items: items.map((item) => ({
+            ...item,
+            quantity: 100,
+            calories: Math.round(item.calories),
+            protein: Math.round(item.protein),
+            carbs: Math.round(item.carbs),
+            fats: Math.round(item.fats),
+          })),
         })),
         macros: {
-          calories: template.calories,
-          protein: template.macros.protein,
-          carbs: template.macros.carbs,
-          fats: template.macros.fats,
+          calories: parseInt(template.calories.split('-')[0]),
+          protein: parseInt(template.macros.protein),
+          carbs: parseInt(template.macros.carbs),
+          fats: parseInt(template.macros.fats),
         },
       })),
     };
-    setSavedPlans([...savedPlans, newPlan]);
+
+    // Add to saved plans and switch to My Plans tab
+    setSavedPlans((prevPlans) => [...prevPlans, newPlan]);
     setActiveTab('my-plans');
   };
 
@@ -205,12 +218,6 @@ const MealPlanner = () => {
         >
           <FaPlus /> Custom Plan
         </button>
-        <button
-          className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
-          onClick={() => setActiveTab('settings')}
-        >
-          <FaCog /> Settings
-        </button>
       </nav>
 
       {/* Main Content Area */}
@@ -245,33 +252,6 @@ const MealPlanner = () => {
                         <span>{template.macros.fats}</span>
                       </div>
                     </div>
-                    <div className="template-meals">
-                      <h4>Sample Meals</h4>
-                      {Object.entries(template.meals).map(
-                        ([mealType, items]) => (
-                          <div key={mealType} className="meal-items">
-                            <h5>{mealType}</h5>
-                            <ul>
-                              {items.map((item, index) => (
-                                <li key={index} className="meal-item">
-                                  <div className="meal-item-image">
-                                    <img src={item.image} alt={item.name} />
-                                  </div>
-                                  <div className="meal-item-info">
-                                    <span className="meal-item-name">
-                                      {item.name}
-                                    </span>
-                                    <span className="meal-item-calories">
-                                      {item.calories} cal
-                                    </span>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )
-                      )}
-                    </div>
                     <button
                       className="use-template-btn"
                       onClick={() => handleUsePlan(template)}
@@ -301,62 +281,54 @@ const MealPlanner = () => {
                         <FaTrash />
                       </button>
                     </div>
-                    <p className="plan-description">{plan.description}</p>
-                    <div className="plan-days">
-                      {plan.days.map((day) => (
-                        <div key={day.day} className="day-section">
-                          <h4>{day.day}</h4>
-                          <div className="day-macros">
-                            <div className="macro-item">
-                              <span>Calories:</span>
-                              <span>{Math.round(day.macros.calories)} cal</span>
-                            </div>
-                            <div className="macro-item">
-                              <span>Protein:</span>
-                              <span>{day.macros.protein}</span>
-                            </div>
-                            <div className="macro-item">
-                              <span>Carbs:</span>
-                              <span>{day.macros.carbs}</span>
-                            </div>
-                            <div className="macro-item">
-                              <span>Fats:</span>
-                              <span>{day.macros.fats}</span>
-                            </div>
+                    <div className="plan-content">
+                      <div className="plan-left">
+                        <div className="plan-image">
+                          <img src={plan.image} alt={plan.name} />
+                        </div>
+                        <p className="plan-description">{plan.description}</p>
+                        <div className="plan-macros">
+                          <div className="macro">
+                            <span>Calories</span>
+                            <span>{plan.days[0].macros.calories} cal</span>
                           </div>
-                          <div className="day-meals">
-                            {day.meals.map((meal) => (
-                              <div key={meal.meal} className="meal-group">
-                                <h5>{meal.meal}</h5>
-                                <ul className="meal-items-list">
-                                  {meal.items.map((item, idx) => (
-                                    <li key={idx} className="meal-item">
-                                      <div className="meal-item-image">
-                                        <img src={item.image} alt={item.name} />
-                                      </div>
-                                      <div className="meal-item-info">
-                                        <span className="meal-item-name">
-                                          {item.name}
-                                        </span>
-                                        <span className="meal-item-quantity">
-                                          {item.quantity}g
-                                        </span>
-                                        <span className="meal-item-calories">
-                                          {Math.round(
-                                            (item.calories * item.quantity) /
-                                              100
-                                          )}{' '}
-                                          cal
-                                        </span>
-                                      </div>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
+                          <div className="macro">
+                            <span>Protein</span>
+                            <span>{plan.days[0].macros.protein}g</span>
+                          </div>
+                          <div className="macro">
+                            <span>Carbs</span>
+                            <span>{plan.days[0].macros.carbs}g</span>
+                          </div>
+                          <div className="macro">
+                            <span>Fats</span>
+                            <span>{plan.days[0].macros.fats}g</span>
                           </div>
                         </div>
-                      ))}
+                      </div>
+                      <div className="plan-right">
+                        <div className="weekly-meals">
+                          {plan.days.map((day) => (
+                            <div key={day.day} className="day-meals">
+                              <h4>{day.day}</h4>
+                              <div className="meals-list">
+                                {day.meals.map((meal) => (
+                                  <div key={meal.meal} className="meal-summary">
+                                    <span className="meal-type">
+                                      {meal.meal}
+                                    </span>
+                                    <span className="meal-items">
+                                      {meal.items
+                                        .map((item) => item.name)
+                                        .join(', ')}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -379,8 +351,6 @@ const MealPlanner = () => {
             />
           </div>
         )}
-
-        {activeTab === 'settings' && <Settings />}
       </div>
     </div>
   );

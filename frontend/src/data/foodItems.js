@@ -12,7 +12,7 @@ export const foodItems = [
     carbs: 70,
     fats: 8,
     image:
-      'https://images.unsplash.com/photo-1505253304499-671c55fb57fe?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=800&auto=format&fit=crop&q=60',
     description: 'Healthy oatmeal topped with fresh banana slices',
     cuisine: 'Western',
   },
@@ -25,7 +25,7 @@ export const foodItems = [
     carbs: 25,
     fats: 5,
     image:
-      'https://images.unsplash.com/photo-1557749322-3bb7f9426d91?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1583577612013-4fec2b74c03b?w=800&auto=format&fit=crop&q=60',
     description: 'Creamy Greek yogurt with mixed berries',
     cuisine: 'Western',
   },
@@ -38,7 +38,7 @@ export const foodItems = [
     carbs: 10,
     fats: 2,
     image:
-      'https://images.unsplash.com/photo-1553530979-fbb9e4aee36f?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1626208834723-bc96f82b7a86?w=800&auto=format&fit=crop&q=60',
     description: 'Nutritious protein shake with fruits',
     cuisine: 'Western',
   },
@@ -53,7 +53,7 @@ export const foodItems = [
     carbs: 80,
     fats: 15,
     image:
-      'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1624726175512-19b9baf9fbd1?w=800&auto=format&fit=crop&q=60',
     description: 'Grilled chicken with brown rice and vegetables',
     cuisine: 'Western',
   },
@@ -79,7 +79,7 @@ export const foodItems = [
     carbs: 70,
     fats: 12,
     image:
-      'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800&auto=format&fit=crop&q=60',
+      'https://images.unsplash.com/photo-1626371802903-08a1343603ea?w=800&auto=format&fit=crop&q=60',
     description: 'Protein-rich quinoa with vegetables',
     cuisine: 'Western',
   },
