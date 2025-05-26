@@ -129,16 +129,6 @@ img {
   padding: 1.5rem;
 }
 
-.recipe-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .recipe-tags {
   display: flex;
   gap: 0.5rem;

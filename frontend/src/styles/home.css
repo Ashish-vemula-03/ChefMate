@@ -897,13 +897,6 @@ html.dark {
   color: white;
 }
 /* Update the home section container */
-#home {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 80px;
-}
 
 #home .container-fluid {
   width: 100%;

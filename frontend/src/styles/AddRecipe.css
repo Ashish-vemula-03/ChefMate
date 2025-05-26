@@ -7,7 +7,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.recipe-title {
+.add-recipe-title {
   font-size: 1.875rem;
   font-weight: 700;
   margin-bottom: 2.5rem;
@@ -108,4 +108,64 @@
 .textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+
+/* Dark mode styles */
+.dark .recipe-container {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .add-recipe-title {
+  color: #ffd700;
+}
+
+.dark .form-label {
+  color: #e0e0e0;
+}
+
+.dark .form-input,
+.dark select.form-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.dark .form-input:focus,
+.dark select.form-input:focus {
+  border-color: #ffd700;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+.dark .btn-add {
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid #ffd700;
+  color: #ffd700;
+}
+
+.dark .btn-add:hover {
+  background: #ffd700;
+  color: #1a1a1a;
+}
+
+.dark .btn-remove {
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid #ff3b30;
+  color: #ff3b30;
+}
+
+.dark .btn-remove:hover {
+  background: #ff3b30;
+  color: #ffffff;
+}
+
+.dark .btn-submit {
+  background: #ffd700;
+  color: #1a1a1a;
+}
+
+.dark .btn-submit:hover {
+  background: #ffed4a;
+  transform: translateY(-2px);
 }

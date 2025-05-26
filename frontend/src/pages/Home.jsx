@@ -12,7 +12,6 @@ import {
   FaShoppingBasket,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/home.css";
 import logo from "../assets/img/logo/logo2.png";
 import { Sun, Moon } from "lucide-react";
@@ -28,7 +27,7 @@ const Home = () => {
     // Check if user is authenticated
     const token = localStorage.getItem("authToken");
     setIsAuthenticated(!!token);
-    
+
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       setDarkMode(true);
@@ -188,7 +187,7 @@ const Home = () => {
               >
                 {darkMode ? <Sun size={24} /> : <Moon size={24} />}
               </button>
-              
+
               {isAuthenticated ? (
                 // Show Dashboard and Profile buttons for authenticated users
                 <>
@@ -255,7 +254,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Rest of the component remains unchanged */}
       <section
         id="features"
