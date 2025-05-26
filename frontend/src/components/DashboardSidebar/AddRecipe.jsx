@@ -94,7 +94,7 @@ const AddRecipe = () => {
 
   return (
     <div className="recipe-container">
-      <h2 className="recipe-title">Add New Recipe</h2>
+      <h2 className="add-recipe-title">Add New Recipe</h2>
       <form onSubmit={handleSubmit}>
         {/* Basic Information */}
         <div className="form-grid">

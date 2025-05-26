@@ -39,22 +39,13 @@ const DashboardSidebar = ({
 
   const navItems = [
     { label: "Explore", icon: Utensils },
-    { label: "My Recipes", icon: BookOpenCheck },
-    { label: "Add Recipe", icon: ChefHat },
     { label: "Favorites", icon: Heart },
     { label: "What’s in My Kitchen", icon: ClipboardList },
-    { label: "Healthy Plate", icon: Brain },
     { label: "Image Search", icon: Image },
-    { label: "Voice Search", icon: Mic },
-    { label: "AI Assistant", icon: Bot },
     { label: "Meal Planner", icon: Calendar },
-    { label: "My Meal Plans", icon: ListTodo },
     { label: "Shopping List", icon: ShoppingCart },
-    { label: "Cooking Mode", icon: CookingPot },
-    { label: "Preferences", icon: ShieldCheck },
-    { label: "Achievements", icon: Medal },
-    { label: "Notifications", icon: Bell },
-    { label: "Community", icon: Users },
+    { label: "My Recipes", icon: BookOpenCheck },
+    { label: "Add Recipe", icon: ChefHat },
   ];
 
   return (
