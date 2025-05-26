@@ -3,6 +3,9 @@ import axios from "axios";
 import ".././../styles/WhatsInMyKitchen.css";
 import { Clock, ChevronDown, X } from "lucide-react";
 
+// At the top of the file, import your configured axios instance
+import axiosInstance from "../../services/axios";
+
 const RecipeGenerator = () => {
   const [ingredients, setIngredients] = useState("");
   const [recipes, setRecipes] = useState([]);
@@ -26,8 +29,9 @@ const RecipeGenerator = () => {
         .split(",")
         .map((i) => i.trim())
         .filter(Boolean);
-      const response = await axios.post(
-        "http://localhost:5000/api/recipes/generate",
+      // Use axiosInstance instead of axios
+      const response = await axiosInstance.post(
+        "recipes/generate",
         {
           ingredients: ingredientsList,
           count: 3, // Request 3 recipes
@@ -38,7 +42,21 @@ const RecipeGenerator = () => {
         throw new Error(response.data.error);
       }
 
-      setRecipes(response.data);
+      // Save each generated recipe to the database using axiosInstance
+      const savedRecipes = await Promise.all(
+        response.data.map(async (recipe) => {
+          const savedRecipe = await axiosInstance.post(
+            "kitchen-recipes",
+            {
+              ...recipe,
+              availableIngredients: ingredientsList
+            }
+          );
+          return savedRecipe.data;
+        })
+      );
+
+      setRecipes(savedRecipes);
     } catch (err) {
       console.error("Error details:", err.response?.data || err.message);
       setError(
