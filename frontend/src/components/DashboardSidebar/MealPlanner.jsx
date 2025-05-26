@@ -6,100 +6,25 @@ import {
   FaUtensils,
   FaCog,
   FaTrash,
-  FaInfoCircle,
 } from 'react-icons/fa';
 import CustomMealPlan from './CustomMealPlan';
 import { getFoodItemsByCategory } from '../../data/foodItems';
 import './MealPlanner.css';
 
-const FoodItemModal = ({ item, position }) => {
-  if (!item) return null;
-
-  return (
-    <div
-      className="food-item-modal"
-      style={{
-        top: position.y,
-        left: position.x,
-      }}
-    >
-      <div className="modal-header">
-        <h4>{item.name}</h4>
-        <p>{item.description}</p>
-      </div>
-      <div className="modal-content">
-        <div className="nutrition-info">
-          <h5>Nutrition Facts</h5>
-          <div className="nutrition-grid">
-            <div className="nutrition-item">
-              <span>Calories</span>
-              <span>{item.calories}</span>
-            </div>
-            <div className="nutrition-item">
-              <span>Protein</span>
-              <span>{item.protein}g</span>
-            </div>
-            <div className="nutrition-item">
-              <span>Carbs</span>
-              <span>{item.carbs}g</span>
-            </div>
-            <div className="nutrition-item">
-              <span>Fats</span>
-              <span>{item.fats}g</span>
-            </div>
-          </div>
-        </div>
-        <div className="ingredients-list">
-          <h5>Ingredients</h5>
-          <ul>
-            {item.ingredients?.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="additional-nutrition">
-          <h5>Additional Nutrition</h5>
-          <div className="nutrition-details">
-            <div className="vitamins">
-              <span>Vitamins:</span>
-              <span>{item.nutrition?.vitamins.join(', ')}</span>
-            </div>
-            <div className="minerals">
-              <span>Minerals:</span>
-              <span>{item.nutrition?.minerals.join(', ')}</span>
-            </div>
-            <div className="fiber">
-              <span>Fiber:</span>
-              <span>{item.nutrition?.fiber}</span>
-            </div>
-            <div className="sugar">
-              <span>Sugar:</span>
-              <span>{item.nutrition?.sugar}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const MealPlanner = () => {
   const [activeTab, setActiveTab] = useState('templates');
   const [savedPlans, setSavedPlans] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [hoveredItem, setHoveredItem] = useState(null);
-  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
 
   const dietTemplates = [
     {
       id: 1,
-      name: 'North Indian Plan',
-      description:
-        'Rich and flavorful North Indian cuisine with balanced nutrition',
+      name: 'Weight Gain Plan',
+      description: 'High-calorie, nutrient-rich meals for muscle building',
       image:
-        'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&auto=format&fit=crop&q=60',
-      calories: '2500-3000',
-      macros: { protein: '25%', carbs: '55%', fats: '20%' },
+        'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=60',
+      calories: '3000-3500',
+      macros: { protein: '30%', carbs: '45%', fats: '25%' },
       meals: {
         Breakfast: getFoodItemsByCategory('Breakfast').slice(0, 2),
         Lunch: getFoodItemsByCategory('Lunch').slice(0, 2),
@@ -109,13 +34,12 @@ const MealPlanner = () => {
     },
     {
       id: 2,
-      name: 'South Indian Plan',
-      description:
-        'Light and nutritious South Indian meals with rice and lentils',
+      name: 'Weight Loss Plan',
+      description: 'Calorie-controlled meals for healthy weight loss',
       image:
-        'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&auto=format&fit=crop&q=60',
-      calories: '2000-2500',
-      macros: { protein: '20%', carbs: '60%', fats: '20%' },
+        'https://images.unsplash.com/photo-1490818387583-1baba5e638af?w=800&auto=format&fit=crop&q=60',
+      calories: '1800-2200',
+      macros: { protein: '35%', carbs: '40%', fats: '25%' },
       meals: {
         Breakfast: getFoodItemsByCategory('Breakfast').slice(1, 3),
         Lunch: getFoodItemsByCategory('Lunch').slice(1, 3),
@@ -125,12 +49,12 @@ const MealPlanner = () => {
     },
     {
       id: 3,
-      name: 'Vegetarian Plan',
-      description: 'Complete vegetarian Indian meals with protein-rich options',
+      name: 'Keto Plan',
+      description: 'High-fat, low-carb meals for ketosis',
       image:
-        'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&auto=format&fit=crop&q=60',
-      calories: '2200-2700',
-      macros: { protein: '20%', carbs: '55%', fats: '25%' },
+        'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop&q=60',
+      calories: '2000-2500',
+      macros: { protein: '20%', carbs: '5%', fats: '75%' },
       meals: {
         Breakfast: getFoodItemsByCategory('Breakfast').slice(0, 2),
         Lunch: getFoodItemsByCategory('Lunch').slice(0, 2),
@@ -140,25 +64,25 @@ const MealPlanner = () => {
     },
     {
       id: 4,
-      name: 'Weight Loss Plan',
-      description: 'Low-calorie Indian meals for healthy weight management',
+      name: 'Gym Plan',
+      description: 'Performance-focused nutrition for athletes',
       image:
-        'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&auto=format&fit=crop&q=60',
-      calories: '1800-2200',
-      macros: { protein: '30%', carbs: '45%', fats: '25%' },
+        'https://images.unsplash.com/photo-1494390248081-4e521a5940db?w=800&auto=format&fit=crop&q=60',
+      calories: '2500-3000',
+      macros: { protein: '30%', carbs: '50%', fats: '20%' },
       meals: {
-        Breakfast: getFoodItemsByCategory('Breakfast').slice(1, 3),
-        Lunch: getFoodItemsByCategory('Lunch').slice(1, 3),
-        Dinner: getFoodItemsByCategory('Dinner').slice(1, 3),
-        Snacks: getFoodItemsByCategory('Snacks').slice(1, 3),
+        Breakfast: getFoodItemsByCategory('Breakfast').slice(0, 2),
+        Lunch: getFoodItemsByCategory('Lunch').slice(0, 2),
+        Dinner: getFoodItemsByCategory('Dinner').slice(0, 2),
+        Snacks: getFoodItemsByCategory('Snacks').slice(0, 2),
       },
     },
     {
       id: 5,
       name: 'Muscle Gain Plan',
-      description: 'Protein-rich Indian meals for muscle building',
+      description: 'Protein-rich meals for muscle growth',
       image:
-        'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&auto=format&fit=crop&q=60',
+        'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&auto=format&fit=crop&q=60',
       calories: '2800-3200',
       macros: { protein: '35%', carbs: '45%', fats: '20%' },
       meals: {
@@ -170,10 +94,40 @@ const MealPlanner = () => {
     },
     {
       id: 6,
-      name: 'Balanced Diet Plan',
-      description: 'Well-rounded Indian meals for overall health',
+      name: 'Vegetarian Plan',
+      description: 'Plant-based meals with complete nutrition',
       image:
-        'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&auto=format&fit=crop&q=60',
+        'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&auto=format&fit=crop&q=60',
+      calories: '2000-2500',
+      macros: { protein: '25%', carbs: '55%', fats: '20%' },
+      meals: {
+        Breakfast: getFoodItemsByCategory('Breakfast').slice(1, 3),
+        Lunch: getFoodItemsByCategory('Lunch').slice(1, 3),
+        Dinner: getFoodItemsByCategory('Dinner').slice(1, 3),
+        Snacks: getFoodItemsByCategory('Snacks').slice(1, 3),
+      },
+    },
+    {
+      id: 7,
+      name: 'Non-Vegetarian Plan',
+      description: 'Balanced meals with animal protein',
+      image:
+        'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=60',
+      calories: '2200-2700',
+      macros: { protein: '30%', carbs: '45%', fats: '25%' },
+      meals: {
+        Breakfast: getFoodItemsByCategory('Breakfast').slice(0, 2),
+        Lunch: getFoodItemsByCategory('Lunch').slice(0, 2),
+        Dinner: getFoodItemsByCategory('Dinner').slice(0, 2),
+        Snacks: getFoodItemsByCategory('Snacks').slice(0, 2),
+      },
+    },
+    {
+      id: 8,
+      name: 'Balanced Diet Plan',
+      description: 'Well-rounded meals for overall health',
+      image:
+        'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&auto=format&fit=crop&q=60',
       calories: '2000-2500',
       macros: { protein: '25%', carbs: '50%', fats: '25%' },
       meals: {
@@ -184,19 +138,6 @@ const MealPlanner = () => {
       },
     },
   ];
-
-  const handleItemHover = (item, event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    setHoveredItem(item);
-    setModalPosition({
-      x: rect.right + 10,
-      y: rect.top,
-    });
-  };
-
-  const handleItemLeave = () => {
-    setHoveredItem(null);
-  };
 
   const handleUsePlan = (template) => {
     const newPlan = {
@@ -286,12 +227,7 @@ const MealPlanner = () => {
                             <h5>{mealType}</h5>
                             <ul>
                               {items.map((item, index) => (
-                                <li
-                                  key={index}
-                                  className="meal-item"
-                                  onMouseEnter={(e) => handleItemHover(item, e)}
-                                  onMouseLeave={handleItemLeave}
-                                >
+                                <li key={index} className="meal-item">
                                   <div className="meal-item-image">
                                     <img src={item.image} alt={item.name} />
                                   </div>
@@ -303,7 +239,6 @@ const MealPlanner = () => {
                                       {item.calories} cal
                                     </span>
                                   </div>
-                                  <FaInfoCircle className="info-icon" />
                                 </li>
                               ))}
                             </ul>
@@ -470,9 +405,6 @@ const MealPlanner = () => {
           </div>
         )}
       </div>
-      {hoveredItem && (
-        <FoodItemModal item={hoveredItem} position={modalPosition} />
-      )}
       </div>
     );
   };

@@ -3,307 +3,156 @@ export const foodItems = [
   // Breakfast Items
   {
     id: 1,
-    name: 'Masala Dosa',
+    name: 'Oatmeal with Banana',
     category: 'Breakfast',
-    calories: 350,
-    protein: 8,
-    carbs: 65,
-    fats: 5,
-    image:
-      'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=500&auto=format&fit=crop&q=60',
-    description: 'Crispy dosa with spiced potato filling and coconut chutney',
-    ingredients: [
-      'Rice flour',
-      'Urad dal',
-      'Potatoes',
-      'Onions',
-      'Spices',
-      'Coconut chutney',
-      'Sambar',
-    ],
-    nutrition: {
-      vitamins: ['B1', 'B6', 'C'],
-      minerals: ['Iron', 'Calcium', 'Potassium'],
-      fiber: '3g',
-      sugar: '2g',
-    },
+    calories: 400,
+    protein: 15,
+    carbs: 70,
+    fats: 8,
+    image: '/images/food/oatmeal.jpg',
+    description: 'Healthy oatmeal topped with fresh banana slices',
   },
   {
     id: 2,
-    name: 'Poha',
+    name: 'Greek Yogurt with Berries',
     category: 'Breakfast',
-    calories: 280,
-    protein: 6,
-    carbs: 55,
-    fats: 4,
-    image:
-      'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&auto=format&fit=crop&q=60',
-    description: 'Flattened rice cooked with vegetables and mild spices',
-    ingredients: [
-      'Flattened rice',
-      'Onions',
-      'Peanuts',
-      'Curry leaves',
-      'Turmeric',
-      'Mustard seeds',
-      'Lemon juice',
-    ],
-    nutrition: {
-      vitamins: ['B1', 'B3', 'B6'],
-      minerals: ['Iron', 'Magnesium', 'Zinc'],
-      fiber: '2g',
-      sugar: '1g',
-    },
+    calories: 250,
+    protein: 20,
+    carbs: 25,
+    fats: 5,
+    image: '/images/food/greek-yogurt.jpg',
+    description: 'Creamy Greek yogurt with mixed berries',
   },
   {
     id: 3,
-    name: 'Idli Sambar',
+    name: 'Protein Shake',
     category: 'Breakfast',
-    calories: 250,
-    protein: 10,
-    carbs: 45,
-    fats: 3,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Steamed rice cakes served with lentil soup',
+    calories: 200,
+    protein: 30,
+    carbs: 10,
+    fats: 2,
+    image: '/images/food/protein-shake.jpg',
+    description: 'Nutritious protein shake with fruits',
   },
 
   // Lunch Items
   {
     id: 4,
-    name: 'Butter Chicken',
+    name: 'Chicken Rice Bowl',
     category: 'Lunch',
-    calories: 650,
-    protein: 35,
-    carbs: 45,
-    fats: 35,
-    image:
-      'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=500&auto=format&fit=crop&q=60',
-    description: 'Tender chicken in rich tomato and butter gravy',
+    calories: 600,
+    protein: 40,
+    carbs: 80,
+    fats: 15,
+    image: '/images/food/chicken-rice.jpg',
+    description: 'Grilled chicken with brown rice and vegetables',
   },
   {
     id: 5,
-    name: 'Vegetable Biryani',
+    name: 'Grilled Chicken Salad',
     category: 'Lunch',
-    calories: 550,
-    protein: 12,
-    carbs: 95,
+    calories: 400,
+    protein: 35,
+    carbs: 20,
     fats: 15,
-    image:
-      'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=500&auto=format&fit=crop&q=60',
-    description: 'Fragrant basmati rice with mixed vegetables and spices',
+    image: '/images/food/chicken-salad.jpg',
+    description: 'Fresh salad with grilled chicken breast',
   },
   {
     id: 6,
-    name: 'Rajma Chawal',
+    name: 'Quinoa Bowl',
     category: 'Lunch',
     calories: 450,
-    protein: 20,
-    carbs: 75,
-    fats: 8,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Red kidney beans curry with steamed rice',
+    protein: 15,
+    carbs: 70,
+    fats: 12,
+    image: '/images/food/quinoa-bowl.jpg',
+    description: 'Protein-rich quinoa with vegetables',
   },
 
   // Dinner Items
   {
     id: 7,
-    name: 'Palak Paneer',
+    name: 'Salmon with Sweet Potato',
     category: 'Dinner',
-    calories: 400,
-    protein: 25,
-    carbs: 20,
+    calories: 700,
+    protein: 45,
+    carbs: 60,
     fats: 25,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Cottage cheese in spinach gravy',
+    image: '/images/food/salmon.jpg',
+    description: 'Baked salmon with roasted sweet potato',
   },
   {
     id: 8,
-    name: 'Chole Bhature',
+    name: 'Baked Fish with Vegetables',
     category: 'Dinner',
-    calories: 600,
-    protein: 15,
-    carbs: 85,
-    fats: 25,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Spiced chickpeas with fried bread',
+    calories: 450,
+    protein: 40,
+    carbs: 30,
+    fats: 15,
+    image: '/images/food/baked-fish.jpg',
+    description: 'Healthy baked fish with seasonal vegetables',
   },
   {
     id: 9,
-    name: 'Dal Makhani',
+    name: 'Vegetable Stir Fry',
     category: 'Dinner',
-    calories: 350,
-    protein: 18,
-    carbs: 45,
-    fats: 15,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Creamy black lentils with butter',
+    calories: 400,
+    protein: 15,
+    carbs: 50,
+    fats: 18,
+    image: '/images/food/stir-fry.jpg',
+    description: 'Colorful vegetable stir fry with tofu',
   },
 
   // Snacks
   {
     id: 10,
-    name: 'Samosa',
+    name: 'Mixed Nuts',
     category: 'Snacks',
-    calories: 250,
-    protein: 5,
-    carbs: 35,
-    fats: 12,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Crispy pastry filled with spiced potatoes and peas',
+    calories: 300,
+    protein: 10,
+    carbs: 15,
+    fats: 25,
+    image: '/images/food/mixed-nuts.jpg',
+    description: 'Healthy mix of nuts and seeds',
   },
   {
     id: 11,
-    name: 'Pakora',
+    name: 'Protein Bar',
     category: 'Snacks',
-    calories: 200,
-    protein: 8,
+    calories: 250,
+    protein: 20,
     carbs: 25,
-    fats: 10,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Vegetable fritters in chickpea batter',
+    fats: 8,
+    image: '/images/food/protein-bar.jpg',
+    description: 'High-protein energy bar',
   },
   {
     id: 12,
-    name: 'Dhokla',
+    name: 'Fruit Smoothie',
     category: 'Snacks',
-    calories: 180,
-    protein: 12,
-    carbs: 30,
-    fats: 5,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Steamed savory cake made from fermented batter',
-  },
-];
-
-// Additional food items for more variety
-export const additionalFoodItems = [
-  // Breakfast
-  {
-    id: 13,
-    name: 'Upma',
-    category: 'Breakfast',
-    calories: 300,
-    protein: 8,
-    carbs: 50,
-    fats: 8,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Semolina porridge with vegetables and spices',
-  },
-  {
-    id: 14,
-    name: 'Aloo Paratha',
-    category: 'Breakfast',
-    calories: 400,
-    protein: 10,
-    carbs: 60,
-    fats: 15,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Stuffed flatbread with spiced potato filling',
-  },
-
-  // Lunch
-  {
-    id: 15,
-    name: 'Paneer Butter Masala',
-    category: 'Lunch',
-    calories: 500,
-    protein: 25,
-    carbs: 35,
-    fats: 30,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Cottage cheese in rich tomato and butter gravy',
-  },
-  {
-    id: 16,
-    name: 'Veg Pulao',
-    category: 'Lunch',
-    calories: 450,
-    protein: 10,
-    carbs: 80,
-    fats: 12,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Fragrant rice with mixed vegetables and spices',
-  },
-
-  // Dinner
-  {
-    id: 17,
-    name: 'Malai Kofta',
-    category: 'Dinner',
-    calories: 550,
-    protein: 20,
-    carbs: 45,
-    fats: 35,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Vegetable dumplings in rich cream gravy',
-  },
-  {
-    id: 18,
-    name: 'Baingan Bharta',
-    category: 'Dinner',
-    calories: 300,
-    protein: 8,
-    carbs: 35,
-    fats: 15,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Roasted eggplant curry with spices',
-  },
-
-  // Snacks
-  {
-    id: 19,
-    name: 'Kachori',
-    category: 'Snacks',
-    calories: 280,
-    protein: 6,
+    calories: 200,
+    protein: 5,
     carbs: 40,
-    fats: 12,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Crispy pastry filled with spiced lentils',
-  },
-  {
-    id: 20,
-    name: 'Bhel Puri',
-    category: 'Snacks',
-    calories: 250,
-    protein: 8,
-    carbs: 45,
-    fats: 8,
-    image:
-      'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=500&auto=format&fit=crop&q=60',
-    description: 'Puffed rice snack with vegetables and chutneys',
+    fats: 2,
+    image: '/images/food/smoothie.jpg',
+    description: 'Refreshing fruit smoothie',
   },
 ];
 
 export const getFoodItemsByCategory = (category) => {
-  return [...foodItems, ...additionalFoodItems].filter(
-    (item) => item.category === category
-  );
+  return foodItems.filter((item) => item.category === category);
 };
 
 export const getFoodItemsByCalories = (minCalories, maxCalories) => {
-  return [...foodItems, ...additionalFoodItems].filter(
+  return foodItems.filter(
     (item) => item.calories >= minCalories && item.calories <= maxCalories
   );
 };
 
 export const getFoodItemsByMacros = (minProtein, minCarbs, minFats) => {
-  return [...foodItems, ...additionalFoodItems].filter(
+  return foodItems.filter(
     (item) =>
       item.protein >= minProtein &&
       item.carbs >= minCarbs &&
