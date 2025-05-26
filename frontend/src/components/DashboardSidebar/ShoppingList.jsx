@@ -12,10 +12,12 @@ import { toast } from "react-hot-toast";
 
 const ShoppingList = () => {
   const [shoppingList, setShoppingList] = useState([]);
+  const [localShoppingList, setLocalShoppingList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deletingRecipe, setDeletingRecipe] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [pendingToggles, setPendingToggles] = useState({});
 
   const fetchShoppingList = async () => {
     try {
@@ -44,13 +46,30 @@ const ShoppingList = () => {
     fetchShoppingList();
   }, []);
 
-  const handleToggleItem = async (itemId, currentStatus) => {
+  useEffect(() => {
+    setLocalShoppingList(shoppingList);
+  }, [shoppingList]);
+
+  const handleToggleItem = async (itemId, currentStatus, recipeId) => {
+    // Optimistically update local UI
+    setLocalShoppingList((prev) =>
+      prev.map((recipe) =>
+        recipe.recipeId === recipeId
+          ? {
+            ...recipe,
+            ingredients: recipe.ingredients.map((ingredient) =>
+              ingredient._id === itemId
+                ? { ...ingredient, added: !currentStatus }
+                : ingredient
+            ),
+          }
+          : recipe
+      )
+    );
     try {
-      console.log("Toggling item:", itemId, "Current status:", currentStatus);
       await updateShoppingListItem(itemId, { added: !currentStatus });
       fetchShoppingList();
     } catch (error) {
-      console.error("Error updating item:", error);
       setError("Failed to update item");
       toast.error("Failed to update item");
     }
@@ -88,6 +107,35 @@ const ShoppingList = () => {
     }
   };
 
+  const handleToggleAllIngredients = async (recipe) => {
+    const allAdded = recipe.ingredients.every((ingredient) => ingredient.added);
+    // Optimistically update local UI
+    setLocalShoppingList((prev) =>
+      prev.map((r) =>
+        r.recipeId === recipe.recipeId
+          ? {
+            ...r,
+            ingredients: r.ingredients.map((ingredient) => ({
+              ...ingredient,
+              added: !allAdded,
+            })),
+          }
+          : r
+      )
+    );
+    try {
+      await Promise.all(
+        recipe.ingredients.map((ingredient) =>
+          updateShoppingListItem(ingredient._id, { added: !allAdded })
+        )
+      );
+      fetchShoppingList();
+    } catch (error) {
+      setError("Failed to update all ingredients");
+      toast.error("Failed to update all ingredients");
+    }
+  };
+
   if (loading) {
     return (
       <div className="shopping-list-container">
@@ -122,7 +170,7 @@ const ShoppingList = () => {
         {error && <div className="error-message mt-2">{error}</div>}
       </div>
 
-      {shoppingList.length === 0 ? (
+      {localShoppingList.length === 0 ? (
         <div className="empty-state">
           <p>Your shopping list is empty.</p>
           <p className="text-sm mt-2 text-gray-500 dark:text-gray-400">
@@ -131,12 +179,23 @@ const ShoppingList = () => {
         </div>
       ) : (
         <div className="divide-y divide-gray-200 dark:divide-gray-700 overflow-y-auto flex-1">
-          {shoppingList.map((recipe) => (
+          {localShoppingList.map((recipe) => (
             <div
               key={recipe.recipeId || recipe.recipeName}
               className="recipe-items p-4"
             >
               <div className="recipe-header">
+                <button
+                  onClick={() => handleToggleAllIngredients(recipe)}
+                  className={`checkbox-custom ${recipe.ingredients.every(ingredient => ingredient.added) ? "checked" : ""}`}
+                  aria-label={`Mark all ingredients in ${recipe.recipeName} as ${recipe.ingredients.every(ingredient => ingredient.added) ? "not bought" : "bought"}`}
+                  style={{ marginRight: '10px' }}
+                >
+                  <Check
+                    size={14}
+                    className={`${recipe.ingredients.every(ingredient => ingredient.added) ? "text-white" : "hidden"}`}
+                  />
+                </button>
                 <h3 className="font-medium">{recipe.recipeName}</h3>
                 <div className="recipe-actions">
                   <button
@@ -159,46 +218,26 @@ const ShoppingList = () => {
               <ul className="space-y-2 mt-3">
                 {recipe.ingredients.map((ingredient) => (
                   <li key={ingredient._id} className="ingredient-item">
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() =>
-                            handleToggleItem(ingredient._id, ingredient.added)
-                          }
-                          className={`checkbox-custom ${
-                            ingredient.added ? "checked" : ""
-                          }`}
-                          aria-label={`Mark ${ingredient.name} as ${
-                            ingredient.added ? "not bought" : "bought"
-                          }`}
-                        >
-                          <Check
-                            size={14}
-                            className={`${
-                              ingredient.added ? "text-white" : "hidden"
-                            }`}
-                          />
-                        </button>
-                        <span
-                          className={`text-sm ${
-                            ingredient.added
-                              ? "line-through text-gray-400 dark:text-gray-500"
-                              : "text-gray-700 dark:text-gray-300"
-                          }`}
-                        >
-                          {ingredient.name}{" "}
-                          {ingredient.quantity !== "1"
-                            ? `- ${ingredient.quantity}`
-                            : ""}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-2">
                       <button
-                        onClick={() => handleRemoveItem(ingredient._id)}
-                        className="text-gray-400 hover:text-red-500 transition-colors"
-                        aria-label={`Remove ${ingredient.name} from shopping list`}
+                        onClick={() => handleToggleItem(ingredient._id, ingredient.added, recipe.recipeId)}
+                        className={`checkbox-custom ${ingredient.added ? "checked" : ""}`}
+                        aria-label={`Mark ${ingredient.name} as ${ingredient.added ? "not bought" : "bought"}`}
                       >
-                        <Trash2 size={14} />
+                        <Check
+                          size={14}
+                          className={`${ingredient.added ? "text-white" : "hidden"}`}
+                        />
                       </button>
+                      <span
+                        className={`text-sm ${ingredient.added
+                          ? "line-through text-gray-400 dark:text-gray-500"
+                          : "text-gray-700 dark:text-gray-300"
+                          }`}
+                      >
+                        {ingredient.name}{" "}
+                        {ingredient.quantity !== "1" ? `- ${ingredient.quantity}` : ""}
+                      </span>
                     </div>
                   </li>
                 ))}
