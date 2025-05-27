@@ -260,42 +260,43 @@ const Home = () => {
         id="features"
         className="min-vh-100 d-flex align-items-center bg-white px-5"
       >
-        <div className="container-fluid">
+        <div className="container-fluid px-5 position-relative">
           <div className="text-center mb-5">
             <span className="badge bg-warning text-dark mb-3">Features</span>
-            <h2 className="display-5 fw-bold mb-3 section-title">
-              What We <span className="accent-text">Offer</span>
-            </h2>
           </div>
-          <div className="row align-items-center">
-            <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
-              <img
-                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                alt="Personalized Recipes"
-                className="img-fluid rounded-4 shadow-lg w-100 section-image-full"
-              />
-            </div>
-            <div className="col-lg-6 p-5">
-              <h2 className="fw-bold display-5">
-                Personalized Recipe Recommendations
-              </h2>
-              <p className="lead mt-3">
-                Get recipe suggestions based on your dietary preferences,
-                allergies, and cooking skill level. Our AI analyzes your profile
-                to recommend the perfect recipes for you.
-              </p>
-              <ul className="list-unstyled fs-5 mt-4">
-                <li>
-                  <FaSearch className="me-2 text-success" /> Smart recipe search
-                </li>
-                <li>
-                  <FaHeart className="me-2 text-success" /> Save your favorites
-                </li>
-                <li>
-                  <FaUtensils className="me-2 text-success" /> Step-by-step
-                  instructions
-                </li>
-              </ul>
+          <div className="container-fluid">
+            <div className="row align-items-center">
+              <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
+                <img
+                  src="https://laurenzcollins.com/uploads/2023/07/what-are-some-interesting-indian-dinner-recipes-i-can-try.webp"
+                  alt="Personalized Recipes"
+                  className="img-fluid rounded-4 shadow-lg w-100 section-image-full"
+                />
+              </div>
+              <div className="col-lg-6 p-5">
+                <h2 className="fw-bold display-5">
+                  Explore Indian Food Recipes
+                </h2>
+                <p className="lead mt-3">
+                  Discover a wide variety of delicious Indian recipes with our
+                  user-friendly interface. Find recipes based on your
+                  preferences and cooking skill level.
+                </p>
+                <ul className="list-unstyled fs-5 mt-4">
+                  <li>
+                    <FaSearch className="me-2 text-success" /> Smart recipe
+                    search
+                  </li>
+                  <li>
+                    <FaHeart className="me-2 text-success" /> Save your
+                    favorites
+                  </li>
+                  <li>
+                    <FaUtensils className="me-2 text-success" /> Step-by-step
+                    instructions
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -305,13 +306,12 @@ const Home = () => {
           <div className="row align-items-center flex-lg-row-reverse">
             <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
               <img
-                src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                src="https://henpicked.net/wp-content/uploads/2021/03/Six-tips-for-smart-meal-planning-via-Henpicked.jpg"
                 alt="Meal Planning"
                 className="img-fluid rounded-4 shadow-lg w-100"
                 style={{ maxHeight: "100vh", objectFit: "cover" }}
               />
             </div>
-
             <div className="col-lg-6 p-5">
               <h2 className="fw-bold display-5">Smart Meal Planning</h2>
               <p className="lead mt-3">
@@ -329,6 +329,104 @@ const Home = () => {
         </div>
       </section>
       <section
+        id="features"
+        className="min-vh-100 d-flex align-items-center bg-white px-5"
+      >
+        <div className="row align-items-center">
+          <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
+            <img
+              src="https://miro.medium.com/v2/resize:fit:1400/1*lbczThKSS60nkRRhmn9nxw.jpeg"
+              alt="Personalized Recipes"
+              className="img-fluid rounded-4 shadow-lg w-100 section-image-full"
+            />
+          </div>
+          <div className="col-lg-6 p-5">
+            <h2 className="fw-bold display-5">Recipe Generation</h2>
+            <p className="lead mt-3">
+              Get recipe suggestions based on your available ingredients. Our AI
+              analyzes your profile to recommend the perfect recipes for you.
+            </p>
+            <ul className="list-unstyled fs-5 mt-4">
+              <li>
+                <FaSearch className="me-2 text-success" /> AI Recipe
+                Recommendation
+              </li>
+              <li>
+                <FaHeart className="me-2 text-success" /> Store Recipes
+              </li>
+              <li>
+                <FaUtensils className="me-2 text-success" /> Step-by-step
+                instructions
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section className="min-vh-100 d-flex align-items-center bg-light px-5">
+        <div className="container-fluid">
+          <div className="row align-items-center flex-lg-row-reverse">
+            <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
+              <img
+                src="https://www.news-medical.net/image-handler/ts/20240321095621/ri/950/src/images/news/ImageForNews_775237_17110725730208722.jpg"
+                alt="Meal Planning"
+                className="img-fluid rounded-4 shadow-lg w-100"
+                style={{ maxHeight: "100vh", objectFit: "cover" }}
+              />
+            </div>
+
+            <div className="col-lg-6 p-5">
+              <h2 className="fw-bold display-5">
+                Image Based Ingredient Recognition
+              </h2>
+              <p className="lead mt-3">
+                Get the list of ingredients from an image of your food. Our AI
+                recognizes the ingredients in the image and provides you with a
+                list of ingredients.
+              </p>
+              <ul className="list-unstyled fs-5 mt-4">
+                <li>📷 Image-based ingredient recognition</li>
+                <li>🔍 Ingredient list generation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        id="features"
+        className="min-vh-100 d-flex align-items-center bg-white px-5"
+      >
+        <div className="container-fluid px-5 position-relative">
+          <div className="container-fluid">
+            <div className="row align-items-center">
+              <div className="col-lg-6 p-0 overflow-hidden d-flex justify-content-center">
+                <img
+                  src="https://www.prestophoto.com/storage/static/landing/cook-book/inspiration-header.jpg"
+                  alt="Personalized Recipes"
+                  className="img-fluid rounded-4 shadow-lg w-100 section-image-full"
+                />
+              </div>
+              <div className="col-lg-6 p-5">
+                <h2 className="fw-bold display-5">Add Your own Recipes</h2>
+                <p className="lead mt-3">
+                  Add your own personalized recipes to our platform. Store them
+                  in your profile.
+                </p>
+
+                <ul className="list-unstyled fs-5 mt-4">
+                  <li>
+                    <FaSearch className="me-2 text-success" /> Smart recipe
+                  </li>
+                  <li>
+                    <FaHeart className="me-2 text-success" /> Save your
+                    Personalized Recipes
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
         id="testimonials"
         className="bg-white py-5 position-relative overflow-hidden"
       >
@@ -337,11 +435,7 @@ const Home = () => {
             <span className="badge bg-warning text-dark mb-3">
               Testimonials
             </span>
-            <h2 className="display-5 fw-bold mb-3 section-title">
-              What Our <span className="accent-text">Users</span> Say
-            </h2>
           </div>
-
           <div className="testimonials-slider">
             <div className="testimonials-track">
               {[...Array(2)]

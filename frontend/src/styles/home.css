@@ -728,7 +728,7 @@ html.dark {
 
 /* Update testimonials section in dark mode */
 .dark #testimonials {
-  background-color: var(--bg-secondary) !important;
+  background-color: grey !important;
 }
 
 .dark .testimonial-card {
@@ -1060,7 +1060,7 @@ html.dark {
 
 /* Update testimonials section in dark mode */
 .dark #testimonials {
-  background-color: var(--bg-secondary) !important;
+  background-color: grey !important;
 }
 
 .dark .testimonial-card {

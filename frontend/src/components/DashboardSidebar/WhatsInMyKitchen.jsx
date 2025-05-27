@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ".././../styles/WhatsInMyKitchen.css";
-import { Clock, ChevronDown, X } from "lucide-react";
+import { Clock, ChevronDown, X, AlignCenter } from "lucide-react";
 
 // At the top of the file, import your configured axios instance
 import axiosInstance from "../../services/axios";
@@ -30,13 +30,10 @@ const RecipeGenerator = () => {
         .map((i) => i.trim())
         .filter(Boolean);
       // Use axiosInstance instead of axios
-      const response = await axiosInstance.post(
-        "recipes/generate",
-        {
-          ingredients: ingredientsList,
-          count: 3, // Request 3 recipes
-        }
-      );
+      const response = await axiosInstance.post("recipes/generate", {
+        ingredients: ingredientsList,
+        count: 3, // Request 3 recipes
+      });
 
       if (response.data.error) {
         throw new Error(response.data.error);
@@ -45,13 +42,10 @@ const RecipeGenerator = () => {
       // Save each generated recipe to the database using axiosInstance
       const savedRecipes = await Promise.all(
         response.data.map(async (recipe) => {
-          const savedRecipe = await axiosInstance.post(
-            "kitchen-recipes",
-            {
-              ...recipe,
-              availableIngredients: ingredientsList
-            }
-          );
+          const savedRecipe = await axiosInstance.post("kitchen-recipes", {
+            ...recipe,
+            availableIngredients: ingredientsList,
+          });
           return savedRecipe.data;
         })
       );
@@ -71,19 +65,22 @@ const RecipeGenerator = () => {
   const handlePasteIngredients = async () => {
     try {
       const clipboardText = await navigator.clipboard.readText();
-      setIngredients(prevIngredients => {
+      setIngredients((prevIngredients) => {
         // If there are existing ingredients, append with a comma
-        return prevIngredients ? `${prevIngredients}, ${clipboardText}` : clipboardText;
+        return prevIngredients
+          ? `${prevIngredients}, ${clipboardText}`
+          : clipboardText;
       });
     } catch (err) {
-      setError('Failed to paste ingredients');
+      setError("Failed to paste ingredients");
     }
   };
 
   return (
     <div className="recipe-generator">
+      <h1 className="mb-5 text-center">AI Recipe Generation</h1>
       <form onSubmit={handleGenerateRecipe} className="recipe-form">
-        <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+        <div style={{ display: "flex", gap: "10px", width: "100%" }}>
           <textarea
             className="ingredient-input"
             placeholder="Enter ingredients separated by commas (e.g., tomatoes, onions, chicken)"
@@ -94,14 +91,14 @@ const RecipeGenerator = () => {
             type="button"
             onClick={handlePasteIngredients}
             style={{
-              padding: '8px 16px',
-              backgroundColor: '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              height: 'fit-content',
-              minWidth: '100px'
+              padding: "8px 16px",
+              backgroundColor: "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              height: "fit-content",
+              minWidth: "100px",
             }}
           >
             Paste
